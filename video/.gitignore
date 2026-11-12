@@ -8,3 +8,8 @@ out
 
 # Whisper binaries and models (rebuild with scripts/setup-whisper.sh)
 whisper.cpp/
+
+# Large/derived media (re-create from footage/, see README)
+public/raw.mp4
+public/voice.wav
+build/
