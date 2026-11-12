@@ -18,7 +18,7 @@ export const Captions: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ top: TOP, height: "auto", alignItems: "center", opacity: exit }}>
-      <div style={{ width: WIDTH, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0 16px" }}>
+      <div style={{ width: WIDTH, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0 24px" }}>
         {page.words.map((w, i) => {
           const s = spring({ frame: frame - w.from, fps, config: { damping: 15, stiffness: 220, mass: 0.5 } });
           const visible = frame >= w.from;
@@ -32,10 +32,12 @@ export const Captions: React.FC = () => {
                 fontSize: 70,
                 lineHeight: 1.18,
                 letterSpacing: -0.5,
-                color: w.key ? M.mint : M.white,
+                color: w.key ? "#6CFFC2" : M.white,
                 opacity: visible ? s : 0,
                 transform: `translateY(${(1 - s) * 26}px) scale(${isCur ? 1.06 : 1})`,
                 display: "inline-block",
+                WebkitTextStroke: "9px rgba(8,12,22,0.9)",
+                paintOrder: "stroke fill",
                 textShadow: isCur
                   ? `0 0 26px ${w.key ? "rgba(62,230,168,0.65)" : "rgba(255,255,255,0.45)"}, 0 4px 18px rgba(0,0,0,0.7)`
                   : "0 4px 18px rgba(0,0,0,0.75), 0 1px 3px rgba(0,0,0,0.6)",

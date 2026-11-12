@@ -72,7 +72,7 @@ const Reason: React.FC<{
   const subIn = interpolate(f, [10, 22], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <TopCard dur={dur}>
-      <Glass style={{ width: 900, alignItems: "flex-start" }}>
+      <Glass style={{ width: 970, alignItems: "flex-start" }}>
         <div style={{ position: "relative" }}>
           <Tile bg={bg} size={110}>
             {icon}
@@ -106,7 +106,7 @@ const Reason: React.FC<{
               <div key={k} style={{ width: k === n ? 34 : 12, height: 12, borderRadius: 6, background: k <= n ? M.mint : "rgba(255,255,255,0.25)" }} />
             ))}
           </div>
-          <Heading size={50}>{title}</Heading>
+          <Heading size={46}>{title}</Heading>
           <div style={{ opacity: subIn, transform: `translateY(${(1 - subIn) * 12}px)` }}>
             <Small>{sub}</Small>
           </div>
@@ -138,7 +138,7 @@ const PHCard: React.FC<{ dur: number }> = ({ dur }) => (
         </Tile>
         <Heading size={40}>Masalan: pH</Heading>
       </div>
-      <Row ok text="pH qiymatini topa oladi" delay={at(37.38) - BOARD2.to} dur={dur} />
+      <Row ok text="pH qiymatini topa oladi" delay={6} dur={dur} />
       <Row ok={false} text="Amaliy ahamiyatini bilmaydi" delay={at(39.96) - BOARD2.to} dur={dur} />
     </Glass>
   </TopCard>
