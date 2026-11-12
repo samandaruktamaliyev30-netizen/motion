@@ -32,6 +32,8 @@ export const M = {
   white: "#FFFFFF",
   chalk: "#F4F1E8",
   board: "#1F4B3A",
+  sage: "#8DB59A",
+  sageBox: "rgba(141,181,154,0.88)",
 };
 
 export const GRAD = {

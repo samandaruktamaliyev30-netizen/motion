@@ -2,6 +2,7 @@ import React from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { PAGES } from "./captions";
 import { M, MONT } from "./ui";
+import { CAPTION_HIDE } from "./timeline";
 
 // Reference-2 style: clean white text at chest height, words appear as they are spoken.
 // Improved: keyword accent, soft glow on the current word, smooth rise-in.
@@ -11,6 +12,7 @@ const WIDTH = 900;
 export const Captions: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  if (CAPTION_HIDE.some(([a, b]) => frame >= a && frame < b)) return null;
   const page = PAGES.find((p) => frame >= p.from && frame < p.to);
   if (!page) return null;
   const exit = interpolate(frame, [page.to - 4, page.to], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });

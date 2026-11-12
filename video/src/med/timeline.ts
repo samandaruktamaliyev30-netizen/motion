@@ -27,13 +27,13 @@ export const at = (sec: number): number => {
 // Expert's face (OpenCV, median): x≈522, forehead y≈620, chin y≈870.
 export const FACE = { cx: 522, cy: 745 };
 
-export const TITLE_END = 90; // title disappears exactly at 3 s
+// Title stays for the whole opening question (0 – 4.6 s); no captions under it.
+export const TITLE_END = 138;
 
 // Camera shots in SOURCE seconds: [start, end, scaleStart, scaleEnd].
 const SHOTS_SRC: [number, number, number, number][] = [
-  [0, 3.0, 1.0, 1.05],
-  [3.0, 4.62, 1.2, 1.24],
-  [4.62, 6.1, 1.0, 1.03],
+  [0, 4.62, 1.0, 1.07],
+  [4.62, 6.1, 1.16, 1.19],
   [6.1, 8.74, 1.25, 1.29],
   [8.74, 14.14, 1.1, 1.14],
   [14.14, 18.86, 1.0, 1.05],
@@ -62,3 +62,21 @@ export const SHOTS: [number, number, number, number][] = SHOTS_SRC.map(([a, b, s
 // Full-screen chalkboard cut-aways (output frames).
 export const BOARD1 = { from: at(8.74), to: at(11.73) }; // school vs institute
 export const BOARD2 = { from: at(31.56), to: at(34.18) }; // pH example
+
+// Low overlays [from, to] in output frames. Captions are hidden while any overlay,
+// the title or a chalkboard is on screen.
+export const OVERLAYS: [number, number][] = [
+  [at(4.64), at(6.1)], // 3 ta sabab
+  [at(6.1), at(8.74)], // 1-sabab
+  [at(14.14), at(16.74)], // 2-sabab
+  [at(24.68), at(28.7)], // 3-sabab
+  [at(47.2), at(49.8)], // iqtibos
+  [at(53.3), DURATION], // obuna
+];
+
+export const CAPTION_HIDE: [number, number][] = [
+  [0, TITLE_END],
+  ...OVERLAYS,
+  [BOARD1.from, BOARD1.to],
+  [BOARD2.from, BOARD2.to],
+];

@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { CAVEAT, GRAD, M, Tile } from "./ui";
+import { CAVEAT, M, Tile } from "./ui";
 import { IconBook, IconFlask, IconGradCap, IconHeartPulse, IconSchool, IconTest } from "./extraIcons";
 
 // Chalkboard background with chalk dust texture and vignette.
@@ -90,12 +90,11 @@ const Polaroid: React.FC<{
           position: "relative",
         }}
       >
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 25%, rgba(255,255,255,0.45), transparent 60%)" }} />
-        {icon}
+                {icon}
       </div>
       <div style={{ fontFamily: CAVEAT, fontWeight: 700, fontSize: 52, color: "#2B2B2B", textAlign: "center", padding: "8px 0 12px" }}>{label}</div>
       {/* pin */}
-      <div style={{ position: "absolute", top: -14, left: "50%", marginLeft: -16, width: 32, height: 32, borderRadius: 16, background: "radial-gradient(circle at 35% 35%, #FF8A8A, #C81E3A)", boxShadow: "0 4px 8px rgba(0,0,0,0.5)" }} />
+      <div style={{ position: "absolute", top: -14, left: "50%", marginLeft: -16, width: 32, height: 32, borderRadius: 16, background: "radial-gradient(circle at 35% 35%, #9AA39C, #4A524C)", boxShadow: "0 4px 8px rgba(0,0,0,0.5)" }} />
     </div>
   );
 };
@@ -119,16 +118,16 @@ export const BoardSchool: React.FC<{ dur: number }> = ({ dur }) => {
       <AbsoluteFill style={{ alignItems: "center" }}>
         <Chalk text="Ta’limdagi uzviylik" start={2} size={104} style={{ marginTop: 250 }} />
       </AbsoluteFill>
-      <Polaroid x={40} y={430} rot={-7} delay={4} bg={GRAD.sky} label="Maktab" icon={<IconSchool size={170} color="white" stroke={1.6} />} />
-      <Polaroid x={710} y={450} rot={6} delay={12} bg={GRAD.mint} label="Institut" icon={<IconGradCap size={170} color="white" stroke={1.6} />} />
+      <Polaroid x={40} y={430} rot={-7} delay={4} bg="#E9E6DC" label="Maktab" icon={<IconSchool size={170} color="#34433A" stroke={1.6} />} />
+      <Polaroid x={710} y={450} rot={6} delay={12} bg="#E9E6DC" label="Institut" icon={<IconGradCap size={170} color="#34433A" stroke={1.6} />} />
       {/* chalk ≠ with hand-drawn circle */}
       <div style={{ position: "absolute", left: 390, top: 520, width: 300, height: 300 }}>
         <svg width={300} height={300} viewBox="0 0 300 300" style={{ position: "absolute", inset: 0 }}>
           <path
             d="M150 30 C 240 28, 278 110, 262 170 C 246 240, 160 276, 96 252 C 30 226, 18 140, 52 86 C 80 44, 130 26, 176 36"
             fill="none"
-            stroke={M.amber}
-            strokeWidth={9}
+            stroke={M.chalk}
+            strokeWidth={7}
             strokeLinecap="round"
             pathLength={1}
             strokeDasharray={1}
@@ -138,10 +137,10 @@ export const BoardSchool: React.FC<{ dur: number }> = ({ dur }) => {
         <Chalk text="≠" start={26} dur={8} size={230} color={M.chalk} style={{ position: "absolute", left: 92, top: 10 }} />
       </div>
       <AbsoluteFill style={{ alignItems: "center" }}>
-        <Chalk text="bilim va ko‘nikma  ≠  talablar" start={40} dur={22} size={70} color="#CFEFDF" style={{ marginTop: 860 }} />
+        <Chalk text="bilim va ko‘nikma  ≠  talablar" start={40} dur={22} size={70} color={M.sage} style={{ marginTop: 860 }} />
       </AbsoluteFill>
-      <Polaroid x={70} y={1430} w={250} rot={8} delay={20} bg={GRAD.amber} label="Kitob" icon={<IconBook size={120} color="white" stroke={1.7} />} />
-      <Polaroid x={760} y={1460} w={250} rot={-9} delay={26} bg={GRAD.violet} label="Test" icon={<IconTest size={120} color="white" stroke={1.7} />} />
+      <Polaroid x={70} y={1430} w={250} rot={8} delay={20} bg="#E9E6DC" label="Kitob" icon={<IconBook size={120} color="#34433A" stroke={1.7} />} />
+      <Polaroid x={760} y={1460} w={250} rot={-9} delay={26} bg="#E9E6DC" label="Test" icon={<IconTest size={120} color="#34433A" stroke={1.7} />} />
     </AbsoluteFill>
   );
 };
@@ -166,9 +165,9 @@ export const BoardPH: React.FC<{ dur: number }> = ({ dur }) => {
           style={{
             height: 70,
             borderRadius: 35,
-            background: "linear-gradient(90deg,#E11D48,#F97316,#FACC15,#22C55E,#14B8A6,#3B82F6,#6D28D9)",
+            background: "repeating-linear-gradient(90deg, rgba(244,241,232,0.85) 0 4px, transparent 4px 64.3px)",
             clipPath: `inset(0 ${100 - bar * 100}% 0 0 round 35px)`,
-            boxShadow: "0 0 0 5px rgba(244,241,232,0.85)",
+            boxShadow: "inset 0 0 0 5px rgba(244,241,232,0.85)",
           }}
         />
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14, fontFamily: CAVEAT, fontWeight: 700, fontSize: 58, color: M.chalk, opacity: bar }}>
@@ -178,18 +177,18 @@ export const BoardPH: React.FC<{ dur: number }> = ({ dur }) => {
         </div>
         {/* marker */}
         <div style={{ position: "absolute", top: -96, left: markerPos * W - 60, width: 120, display: "flex", flexDirection: "column", alignItems: "center", opacity: f > 26 ? 1 : 0 }}>
-          <div style={{ fontFamily: CAVEAT, fontWeight: 700, fontSize: 60, color: M.amber, lineHeight: 1 }}>7,4</div>
+          <div style={{ fontFamily: CAVEAT, fontWeight: 700, fontSize: 60, color: M.sage, lineHeight: 1 }}>7,4</div>
           <svg width={40} height={30} viewBox="0 0 40 30">
-            <path d="M4 4h32L20 26z" fill={M.amber} />
+            <path d="M4 4h32L20 26z" fill={M.sage} />
           </svg>
         </div>
       </div>
       <AbsoluteFill style={{ alignItems: "center" }}>
-        <Chalk text="Qon pH: 7,35 – 7,45" start={40} dur={18} size={78} color="#CFEFDF" style={{ marginTop: 760 }} />
-        <Chalk text="Bu nima uchun muhim?" start={56} dur={14} size={66} color={M.amber} style={{ marginTop: 22 }} />
+        <Chalk text="Qon pH: 7,35 – 7,45" start={40} dur={18} size={78} color={M.sage} style={{ marginTop: 760 }} />
+        <Chalk text="Bu nima uchun muhim?" start={56} dur={14} size={66} color={M.chalk} style={{ marginTop: 22 }} />
       </AbsoluteFill>
-      <Polaroid x={60} y={1420} w={260} rot={-8} delay={10} bg={GRAD.sky} label="Eritma" icon={<IconFlask size={130} color="white" stroke={1.7} />} />
-      <Polaroid x={750} y={1440} w={260} rot={7} delay={18} bg={GRAD.coral} label="Organizm" icon={<IconHeartPulse size={130} color="white" stroke={1.7} />} />
+      <Polaroid x={60} y={1420} w={260} rot={-8} delay={10} bg="#E9E6DC" label="Eritma" icon={<IconFlask size={130} color="#34433A" stroke={1.7} />} />
+      <Polaroid x={750} y={1440} w={260} rot={7} delay={18} bg="#E9E6DC" label="Organizm" icon={<IconHeartPulse size={130} color="#34433A" stroke={1.7} />} />
     </AbsoluteFill>
   );
 };
