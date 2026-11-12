@@ -154,3 +154,59 @@ export const IconMerge: React.FC<P> = (p) => (
     <path d="M6 3v5a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3M12 14v7" />
   </Svg>
 );
+
+export const IconGradCap: React.FC<P> = (p) => (
+  <Svg {...p}>
+    <path d="M2 9.5 12 5l10 4.5L12 14z" />
+    <path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5M22 9.5v5" />
+  </Svg>
+);
+
+export const IconLinkBroken: React.FC<P> = (p) => (
+  <Svg {...p}>
+    <path d="M9.5 6.5 11 5a4.2 4.2 0 0 1 6 6l-1.5 1.5M14.5 17.5 13 19a4.2 4.2 0 0 1-6-6l1.5-1.5" />
+    <path d="M4 4l3 3M20 20l-3-3M16 3v2.5M3 16h2.5" />
+  </Svg>
+);
+
+export const IconTest: React.FC<P> = (p) => (
+  <Svg {...p}>
+    <rect x="4.5" y="3" width="15" height="18" rx="2.5" />
+    <path d="M8 8l1.2 1.2L11.5 7M8 13.5l1.2 1.2 2.3-2.2M14 8h2.5M14 13.5h2.5M8 18h8.5" />
+  </Svg>
+);
+
+export const IconFlask: React.FC<P> = (p) => (
+  <Svg {...p}>
+    <path d="M9.5 3h5M10 3v6L4.8 18a2 2 0 0 0 1.7 3h11a2 2 0 0 0 1.7-3L14 9V3" />
+    <path d="M7.2 15h9.6" />
+  </Svg>
+);
+
+export const IconStethoscope: React.FC<P> = (p) => (
+  <Svg {...p}>
+    <path d="M5 3v6a5 5 0 0 0 10 0V3M5 3h2M13 3h2" />
+    <path d="M10 14v2a5 5 0 0 0 10 0v-2" />
+    <circle cx="20" cy="12" r="2" />
+  </Svg>
+);
+
+export const IconBrain: React.FC<P> = (p) => (
+  <Svg {...p}>
+    <path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3 2.5 2.5 0 0 0 3-2.5V6.5A2.5 2.5 0 0 0 9 4z" />
+    <path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3 2.5 2.5 0 0 1-3-2.5" />
+  </Svg>
+);
+
+export const IconBulb: React.FC<P> = (p) => (
+  <Svg {...p}>
+    <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" />
+  </Svg>
+);
+
+export const IconSchool: React.FC<P> = (p) => (
+  <Svg {...p}>
+    <path d="M3 21h18M5 21v-9l7-4 7 4v9M12 8V3l4 1.5L12 6" />
+    <path d="M10 21v-4h4v4M8.5 13.5h1M14.5 13.5h1" />
+  </Svg>
+);
