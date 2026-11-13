@@ -58,24 +58,54 @@ const BRoll: React.FC<{ src: string; dur: number; zoom?: [number, number]; cut?:
   );
 };
 
-/* ---------------- title (opening) ---------------- */
+/* ---------------- title (opening): "NEGA KIUTda öqiş kerak?" ---------------- */
+const TitleWord: React.FC<{ delay: number; children: React.ReactNode; style?: React.CSSProperties }> = ({ delay, children, style }) => {
+  const f = useCurrentFrame();
+  const k = interpolate(f, [delay, delay + 12], [0, 1], { ...clamp, easing: EASE });
+  return (
+    <span style={{ display: "inline-block", overflow: "hidden", padding: "0 6px 10px" }}>
+      <span style={{ display: "inline-block", transform: `translateY(${(1 - k) * 110}%)`, opacity: k, ...style }}>{children}</span>
+    </span>
+  );
+};
+
 const Title: React.FC = () => {
   const f = useCurrentFrame();
   if (f >= TITLE_END) return null;
-  const a = fade(f, 4, TITLE_END, 14, 8);
-  const b = fade(f, 12, TITLE_END, 16, 8);
-  const line = interpolate(f, [18, 40], [0, 1], { ...clamp, easing: EASE });
+  const out = interpolate(f, [TITLE_END - 8, TITLE_END], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
+  const line = interpolate(f, [16, 38], [0, 1], { ...clamp, easing: EASE });
+  const shine = interpolate(f, [22, 50], [-60, 160], clamp);
   return (
-    <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-start", paddingTop: 200 }}>
-      <div style={{ fontFamily: INTER, fontWeight: 500, fontSize: 58, letterSpacing: 2, color: "white", opacity: a, transform: `translateY(${(1 - a) * 20}px)`, textShadow: SHADOW }}>
-        Nega aynan
+    <AbsoluteFill style={{ alignItems: "center", paddingTop: 170, opacity: 1 - out, transform: `scale(${1 + out * 0.06})`, filter: `blur(${out * 8}px)` }}>
+      <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 64, letterSpacing: 18, color: "rgba(255,255,255,0.92)", textShadow: SHADOW, lineHeight: 1 }}>
+        <TitleWord delay={2}>NEGA</TitleWord>
       </div>
-      <div style={{ fontFamily: INTER, fontWeight: 800, fontSize: 210, letterSpacing: -4, lineHeight: 1, color: "white", opacity: b, transform: `translateY(${(1 - b) * 30}px)`, textShadow: SHADOW }}>
-        KIUT?
+      <div style={{ position: "relative", fontFamily: INTER, lineHeight: 0.95, color: "white", textShadow: SHADOW, marginTop: 6 }}>
+        <TitleWord delay={7}>
+          <span style={{ position: "relative", fontWeight: 900, fontSize: 196, letterSpacing: -6 }}>
+            KIUT
+            {/* light sweep across KIUT */}
+            <span
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: `linear-gradient(100deg, transparent ${shine - 20}%, rgba(255,255,255,0.95) ${shine}%, transparent ${shine + 20}%)`,
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+                textShadow: "none",
+              }}
+            >
+              KIUT
+            </span>
+          </span>
+          <span style={{ fontWeight: 300, fontSize: 150, letterSpacing: -3 }}>da</span>
+        </TitleWord>
       </div>
-      <div style={{ width: 420 * line, height: 3, background: "rgba(255,255,255,0.85)", marginTop: 26, opacity: b }} />
-      <div style={{ fontFamily: INTER, fontWeight: 500, fontSize: 36, letterSpacing: 6, color: "rgba(255,255,255,0.9)", marginTop: 22, opacity: b, textShadow: SHADOW }}>
-        {N("TIBBIYOT YO‘NALISHI")}
+      <div style={{ width: 520 * line, height: 3, borderRadius: 2, background: "linear-gradient(90deg, transparent, white, transparent)", margin: "8px 0 14px" }} />
+      <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 84, letterSpacing: -1.5, color: "white", textShadow: SHADOW, lineHeight: 1 }}>
+        <TitleWord delay={14}>{N("o‘qish")}</TitleWord>
+        <TitleWord delay={18}>kerak?</TitleWord>
       </div>
     </AbsoluteFill>
   );
@@ -144,30 +174,55 @@ const Captions: React.FC = () => {
   );
 };
 
-/* ---------------- big animated numbers 1..5 ---------------- */
+/* ---------------- big animated numbers 1..5: outline draw -> liquid fill ---------------- */
 const NumberPop: React.FC<{ n: number; dur: number }> = ({ n, dur }) => {
   const f = useCurrentFrame();
-  const ring = interpolate(f, [0, 16], [0, 1], { ...clamp, easing: EASE });
-  const rise = interpolate(f, [2, 14], [1, 0], { ...clamp, easing: EASE });
-  const label = interpolate(f, [8, 18], [0, 1], { ...clamp, easing: EASE });
+  const pop = interpolate(f, [0, 10], [0.82, 1], { ...clamp, easing: Easing.out(Easing.back(1.6)) });
+  const outline = interpolate(f, [0, 8], [0, 1], { ...clamp, easing: EASE });
+  const fill = interpolate(f, [5, 17], [0, 1], { ...clamp, easing: EASE });
+  const lines = interpolate(f, [6, 18], [0, 1], { ...clamp, easing: EASE });
+  const of5 = interpolate(f, [10, 18], [0, 1], { ...clamp, easing: EASE });
   const out = interpolate(f, [dur - 6, dur], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
-  const R = 170;
-  const C = 2 * Math.PI * R;
+  const word = "SABAB".split("");
+  const numStyle: React.CSSProperties = { fontFamily: INTER, fontWeight: 900, fontSize: 380, lineHeight: 0.9, letterSpacing: -10 };
   return (
-    <div style={{ position: "absolute", top: 1030, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", opacity: 1 - out, transform: `translateY(${-out * 40}px)`, filter: `blur(${out * 8}px)` }}>
-      <div style={{ position: "relative", width: 2 * R + 20, height: 2 * R + 20, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <svg width={2 * R + 20} height={2 * R + 20} style={{ position: "absolute", inset: 0, transform: "rotate(-90deg)", filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.45))" }}>
-          <circle cx={R + 10} cy={R + 10} r={R} fill="rgba(0,0,0,0.2)" stroke="rgba(255,255,255,0.25)" strokeWidth={3} />
-          <circle cx={R + 10} cy={R + 10} r={R} fill="none" stroke="white" strokeWidth={5} strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C * (1 - ring)} />
-        </svg>
-        <div style={{ overflow: "hidden", height: 260, display: "flex", alignItems: "center" }}>
-          <div style={{ fontFamily: INTER, fontWeight: 800, fontSize: 250, lineHeight: 1, color: "white", letterSpacing: -6, transform: `translateY(${rise * 260}px)`, textShadow: "0 8px 30px rgba(0,0,0,0.45)" }}>
-            {n}
-          </div>
+    <div
+      style={{
+        position: "absolute",
+        top: 990,
+        left: 0,
+        right: 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        opacity: 1 - out,
+        transform: `translateX(${-out * 120}px)`,
+        filter: `blur(${out * 10}px)`,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 34 }}>
+        <div style={{ width: 200 * lines, height: 3, background: "linear-gradient(90deg, transparent, white)" }} />
+        <div style={{ position: "relative", transform: `scale(${pop})` }}>
+          {/* outline */}
+          <div style={{ ...numStyle, color: "transparent", WebkitTextStroke: "4px white", opacity: outline, filter: "drop-shadow(0 6px 18px rgba(0,0,0,0.45))" }}>{n}</div>
+          {/* liquid fill rising from the bottom */}
+          <div style={{ ...numStyle, position: "absolute", inset: 0, color: "white", clipPath: `inset(${(1 - fill) * 100}% 0 0 0)` }}>{n}</div>
+          {/* "/5" */}
+          <div style={{ position: "absolute", right: -64, top: 34, fontFamily: INTER, fontWeight: 600, fontSize: 44, color: "rgba(255,255,255,0.85)", opacity: of5, transform: `translateY(${(1 - of5) * 16}px)`, textShadow: SHADOW }}>/5</div>
         </div>
+        <div style={{ width: 200 * lines, height: 3, background: "linear-gradient(90deg, white, transparent)" }} />
       </div>
-      <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 34, letterSpacing: 10, color: "white", marginTop: 18, opacity: label, transform: `translateY(${(1 - label) * 14}px)`, textShadow: SHADOW }}>
-        {n}-SABAB
+      <div style={{ display: "flex", gap: 4, marginTop: 10 }}>
+        {word.map((ch, i) => {
+          const k = interpolate(f, [9 + i * 1.5, 17 + i * 1.5], [0, 1], { ...clamp, easing: EASE });
+          return (
+            <span key={i} style={{ display: "inline-block", overflow: "hidden" }}>
+              <span style={{ display: "inline-block", fontFamily: INTER, fontWeight: 700, fontSize: 40, letterSpacing: 14, color: "white", transform: `translateY(${(1 - k) * 100}%)`, textShadow: SHADOW }}>
+                {ch}
+              </span>
+            </span>
+          );
+        })}
       </div>
     </div>
   );
