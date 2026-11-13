@@ -33,6 +33,7 @@ const SRC: [number, string, number][] = [
   [46.28, "Laboratoriyalarning oxirgi rusumdagi", 47.7],
   [47.72, "zamonaviy uskunalar bilan ta’minlanganligi.", 49.62],
   [49.93, "Va ayniqsa — qulay lokatsiya.", 51.6],
+  [54.3, "Juda yaxshi lokatsiya.", 55.25],
 ];
 
 export type Phrase = { from: number; to: number; text: string };

@@ -13,11 +13,13 @@ export const CLIPS = [
   { srcStart: 974, srcEnd: 992, out: 912 },
   { srcStart: 1001, srcEnd: 1030, out: 930 },
   { srcStart: 1043, srcEnd: 1491, out: 959 },
-  { srcStart: 1498, srcEnd: 1549, out: 1407 },
-  { srcStart: 1560, srcEnd: 1656, out: 1458 },
+  { srcStart: 1498, srcEnd: 1659, out: 1407 }, // ending kept uncut
 ] as const;
 
-export const DURATION = 1554;
+export const SPEECH_END = 1568;
+// After the speech: drone shot of the campus with the subscribe button.
+export const OUTRO = { from: SPEECH_END, to: SPEECH_END + 84 };
+export const DURATION = OUTRO.to;
 
 export const at = (sec: number): number => {
   const f = Math.round(sec * FPS);
@@ -52,34 +54,36 @@ const SHOTS_SRC: [number, number, number, number][] = [
   [38.22, 41.0, 1.2, 1.23],
   [41.0, 41.64, 1.06, 1.07],
   [49.62, 51.62, 1.15, 1.18],
-  [52.0, 55.3, 1.0, 1.05],
+  [51.62, 55.3, 1.0, 1.06],
 ];
 export const SHOTS: [number, number, number, number][] = SHOTS_SRC.map(([a, b, s0, s1]) => [at(a), at(b), s0, s1]);
 
 // B-roll cut-aways (output frames) as requested:
-// question -> drone shot of the university; "300+ ustoz / 40 ming talaba" -> next shots;
-// "amaliyot" -> laboratory.
+// question -> drone shot; "300+ ustoz" -> teacher; "40 ming talaba" -> students in white
+// coats in a lecture; "amaliyot" -> the shot provided for it (C0062).
 export const BROLL = {
   drone: { from: 0, to: at(2.74) },
   teacher: { from: at(10.76), to: at(12.82) },
   students: { from: at(12.82), to: at(15.3) },
-  lab: { from: at(41.64), to: at(49.62) },
+  practice: { from: at(41.64), to: at(49.62) },
 };
 
-// Reason sections for the small "01 / 05" marker.
-export const REASONS: [number, number][] = [
-  [at(2.74), at(9.75)],
-  [at(9.78), at(17.44)],
-  [at(17.5), at(32.23)],
-  [at(32.48), at(40.9)],
-  [at(41.0), DURATION],
+// Big animated reason numbers 1..5 (shown low; captions hidden meanwhile).
+export const NUMBERS: [number, number][] = [
+  [at(2.74), at(3.88)],
+  [at(9.78), at(10.76)],
+  [at(17.5), at(18.34)],
+  [at(32.48), at(33.37)],
+  [at(41.0), at(41.64)],
 ];
 
 export const TITLE_END = at(2.74);
-export const LOCATION = { from: at(52.0), to: DURATION };
+// "Bittasi metro oldida, bittasi … oldida" -> metro animation.
+export const METRO = { from: at(51.62), to: at(54.28) };
 
-// No captions under the title or the location card.
 export const CAPTION_HIDE: [number, number][] = [
   [0, TITLE_END],
-  [LOCATION.from, LOCATION.to],
+  ...NUMBERS,
+  [METRO.from, METRO.to],
+  [OUTRO.from, OUTRO.to],
 ];

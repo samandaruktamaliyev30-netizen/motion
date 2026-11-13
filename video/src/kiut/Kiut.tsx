@@ -2,7 +2,7 @@ import React from "react";
 import { AbsoluteFill, Easing, interpolate, Sequence, staticFile, useCurrentFrame } from "remotion";
 import { Audio, Video } from "@remotion/media";
 import { loadFont } from "@remotion/fonts";
-import { BROLL, CAPTION_HIDE, DURATION, FACE, LOCATION, REASONS, SHOTS, TITLE_END } from "./timeline";
+import { BROLL, CAPTION_HIDE, DURATION, FACE, METRO, NUMBERS, OUTRO, SHOTS, TITLE_END } from "./timeline";
 import { PHRASES } from "./captions";
 
 /* ---------- font: Inter (clean, grown-up subtitles) ---------- */
@@ -81,25 +81,6 @@ const Title: React.FC = () => {
   );
 };
 
-/* ---------- small reason marker "01 / 05" ---------- */
-const ReasonTag: React.FC = () => {
-  const f = useCurrentFrame();
-  if (CAPTION_HIDE.some(([a, b]) => f >= a && f < b)) return null;
-  const i = REASONS.findIndex(([a, b]) => f >= a && f < b);
-  if (i < 0) return null;
-  const [a, b] = REASONS[i];
-  const o = fade(f, a, b, 8, 6);
-  return (
-    <div style={{ position: "absolute", top: 985, left: 0, right: 0, display: "flex", justifyContent: "center", opacity: o * 0.9 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 14, fontFamily: INTER, fontWeight: 600, fontSize: 28, letterSpacing: 5, color: "white", textShadow: SHADOW }}>
-        <div style={{ width: 36, height: 2, background: "rgba(255,255,255,0.8)" }} />
-        {String(i + 1).padStart(2, "0")} / 05
-        <div style={{ width: 36, height: 2, background: "rgba(255,255,255,0.8)" }} />
-      </div>
-    </div>
-  );
-};
-
 /* ---------- subtitles: white, calm, phrase by phrase ---------- */
 const Captions: React.FC = () => {
   const f = useCurrentFrame();
@@ -130,19 +111,128 @@ const Captions: React.FC = () => {
   );
 };
 
-/* ---------- location card at the end ---------- */
-const Location: React.FC = () => {
+/* ---------- big animated reason number (low, white, minimal) ---------- */
+const NumberPop: React.FC<{ n: number; dur: number }> = ({ n, dur }) => {
   const f = useCurrentFrame();
-  const o = fade(f, 0, LOCATION.to - LOCATION.from + 10, 10, 1);
+  const ease = Easing.bezier(0.2, 0.8, 0.2, 1);
+  const ring = interpolate(f, [0, 16], [0, 1], { extrapolateRight: "clamp", easing: ease });
+  const rise = interpolate(f, [2, 14], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: ease });
+  const label = interpolate(f, [8, 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: ease });
+  const out = interpolate(f, [dur - 6, dur], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.in(Easing.cubic) });
+  const R = 170;
+  const C = 2 * Math.PI * R;
   return (
-    <div style={{ position: "absolute", top: 1050, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", opacity: o, transform: `translateY(${(1 - o) * 16}px)` }}>
-      <svg width={74} height={74} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.5))" }}>
-        <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
-        <circle cx="12" cy="9.5" r="2.6" />
-      </svg>
-      <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 64, color: "white", marginTop: 14, textShadow: SHADOW, letterSpacing: -0.8 }}>Qulay lokatsiya</div>
-      <div style={{ fontFamily: INTER, fontWeight: 500, fontSize: 38, color: "rgba(255,255,255,0.88)", marginTop: 8, textShadow: SHADOW }}>Metro yonida</div>
+    <div style={{ position: "absolute", top: 1030, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", opacity: 1 - out, transform: `translateY(${-out * 40}px)`, filter: `blur(${out * 8}px)` }}>
+      <div style={{ position: "relative", width: 2 * R + 20, height: 2 * R + 20, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <svg width={2 * R + 20} height={2 * R + 20} style={{ position: "absolute", inset: 0, transform: "rotate(-90deg)", filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.45))" }}>
+          <circle cx={R + 10} cy={R + 10} r={R} fill="rgba(0,0,0,0.18)" stroke="rgba(255,255,255,0.25)" strokeWidth={3} />
+          <circle cx={R + 10} cy={R + 10} r={R} fill="none" stroke="white" strokeWidth={5} strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C * (1 - ring)} />
+        </svg>
+        <div style={{ overflow: "hidden", height: 260, display: "flex", alignItems: "center" }}>
+          <div style={{ fontFamily: INTER, fontWeight: 800, fontSize: 250, lineHeight: 1, color: "white", letterSpacing: -6, transform: `translateY(${rise * 260}px)`, textShadow: "0 8px 30px rgba(0,0,0,0.45)" }}>
+            {n}
+          </div>
+        </div>
+      </div>
+      <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 34, letterSpacing: 10, color: "white", marginTop: 18, opacity: label, transform: `translateY(${(1 - label) * 14}px)`, textShadow: SHADOW }}>
+        {n}-SABAB
+      </div>
     </div>
+  );
+};
+
+/* ---------- metro animation: train arrives at the station, pin drops ---------- */
+const Metro: React.FC<{ dur: number }> = ({ dur }) => {
+  const f = useCurrentFrame();
+  const ease = Easing.bezier(0.2, 0.8, 0.2, 1);
+  const W = 860;
+  const track = interpolate(f, [0, 14], [0, 1], { extrapolateRight: "clamp", easing: ease });
+  const train = interpolate(f, [8, 40], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.3, 0, 0.2, 1) });
+  const pin = interpolate(f, [38, 50], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(2)) });
+  const text = interpolate(f, [44, 56], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: ease });
+  const all = fade(f, 0, dur, 6, 7);
+  const station = W / 2;
+  const trainW = 230;
+  const trainX = -trainW + train * (station - trainW / 2 + trainW);
+  return (
+    <div style={{ position: "absolute", top: 1060, left: (1080 - W) / 2, width: W, height: 380, opacity: all }}>
+      {/* pin + M sign above the station */}
+      <div style={{ position: "absolute", left: station - 44, top: 0, transform: `translateY(${(1 - pin) * -60}px) scale(${0.6 + 0.4 * pin})`, opacity: pin }}>
+        <svg width={88} height={110} viewBox="0 0 44 55" style={{ filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.5))" }}>
+          <path d="M22 54S4 34 4 21a18 18 0 0 1 36 0c0 13-18 33-18 33z" fill="white" />
+          <text x="22" y="28" textAnchor="middle" fontFamily={INTER} fontWeight={800} fontSize={20} fill="#111">M</text>
+        </svg>
+      </div>
+      {/* track */}
+      <div style={{ position: "absolute", top: 196, left: 0, width: W * track, height: 4, borderRadius: 2, background: "white", boxShadow: "0 2px 10px rgba(0,0,0,0.4)" }} />
+      {[0.12, 0.5, 0.88].map((p, i) => (
+        <div key={i} style={{ position: "absolute", top: 186, left: W * p - 12, width: 24, height: 24, borderRadius: 12, border: "4px solid white", background: i === 1 ? "white" : "rgba(0,0,0,0.35)", opacity: track > p ? 1 : 0 }} />
+      ))}
+      {/* train */}
+      <div style={{ position: "absolute", top: 128, left: trainX, width: trainW, height: 58, borderRadius: "16px 30px 12px 12px", background: "white", boxShadow: "0 8px 20px rgba(0,0,0,0.4)", display: "flex", alignItems: "center", gap: 10, padding: "0 18px", overflow: "hidden" }}>
+        {[0, 1, 2, 3].map((k) => (
+          <div key={k} style={{ width: 34, height: 24, borderRadius: 5, background: "#1B1F27" }} />
+        ))}
+      </div>
+      {/* label */}
+      <div style={{ position: "absolute", top: 248, left: 0, right: 0, textAlign: "center", opacity: text, transform: `translateY(${(1 - text) * 14}px)` }}>
+        <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 58, color: "white", textShadow: SHADOW, letterSpacing: -0.6 }}>Metro bekati yonida</div>
+      </div>
+    </div>
+  );
+};
+
+/* ---------- outro: campus drone shot + subscribe button ---------- */
+const Outro: React.FC<{ dur: number }> = ({ dur }) => {
+  const f = useCurrentFrame();
+  const clickAt = 34;
+  const clicked = f >= clickAt;
+  const btn = fade(f, 6, dur + 10, 10, 1);
+  const press = interpolate(f, [clickAt - 2, clickAt + 1, clickAt + 7], [1, 0.9, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const cur = interpolate(f, [10, clickAt - 2], [200, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
+  const ripple = interpolate(f, [clickAt, clickAt + 14], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  return (
+    <AbsoluteFill>
+      <BRoll src={staticFile("kiut/drone_end.mp4")} dur={dur} zoom={[1.04, 1.1]} />
+      <AbsoluteFill style={{ background: "linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.55) 100%)" }} />
+      <div style={{ position: "absolute", top: 1180, left: 0, right: 0, display: "flex", justifyContent: "center", opacity: btn, transform: `translateY(${(1 - btn) * 30}px)` }}>
+        <div style={{ position: "relative" }}>
+          <div
+            style={{
+              transform: `scale(${press})`,
+              background: clicked ? "rgba(255,255,255,0.16)" : "white",
+              border: "2px solid white",
+              backdropFilter: "blur(10px)",
+              color: clicked ? "white" : "#111",
+              borderRadius: 999,
+              padding: "26px 60px",
+              fontFamily: INTER,
+              fontWeight: 700,
+              fontSize: 50,
+              letterSpacing: -0.5,
+              whiteSpace: "nowrap",
+              display: "flex",
+              alignItems: "center",
+              gap: 16,
+              boxShadow: "0 14px 36px rgba(0,0,0,0.35)",
+            }}
+          >
+            {clicked ? (
+              <svg width={44} height={44} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12.5 10 17.5 19.5 7" />
+              </svg>
+            ) : null}
+            {clicked ? "Obuna bo‘ldingiz" : "Obuna bo‘ling"}
+          </div>
+          {clicked ? (
+            <div style={{ position: "absolute", left: "50%", top: "50%", marginLeft: 22, marginTop: -44, width: 120, height: 120, borderRadius: 60, border: "4px solid white", opacity: 1 - ripple, transform: `scale(${0.4 + ripple * 1.6})` }} />
+          ) : null}
+          <svg width={72} height={72} viewBox="0 0 24 24" style={{ position: "absolute", left: "50%", top: "50%", marginLeft: 70 + cur, marginTop: 10, opacity: f < clickAt + 20 ? btn : 0, transform: `scale(${press})` }}>
+            <path d="M4 2l16 9-7 1.5L9.5 20z" fill="white" stroke="#111" strokeWidth={1.4} strokeLinejoin="round" />
+          </svg>
+        </div>
+      </div>
+    </AbsoluteFill>
   );
 };
 
@@ -160,8 +250,7 @@ export const Kiut: React.FC = () => {
         <Video name="Clip 8" src={RAW} muted trimBefore={974} from={912} durationInFrames={18} />
         <Video name="Clip 9" src={RAW} muted trimBefore={1001} from={930} durationInFrames={29} />
         <Video name="Clip 10" src={RAW} muted trimBefore={1043} from={959} durationInFrames={448} />
-        <Video name="Clip 11" src={RAW} muted trimBefore={1498} from={1407} durationInFrames={51} />
-        <Video name="Clip 12" src={RAW} muted trimBefore={1560} from={1458} durationInFrames={96} />
+        <Video name="Clip 11 (ending, uncut)" src={RAW} muted trimBefore={1498} from={1407} durationInFrames={161} />
       </Camera>
 
       <Sequence name="B-roll: dron (universitet)" from={BROLL.drone.from} durationInFrames={BROLL.drone.to - BROLL.drone.from}>
@@ -173,8 +262,8 @@ export const Kiut: React.FC = () => {
       <Sequence name="B-roll: talabalar" from={BROLL.students.from} durationInFrames={BROLL.students.to - BROLL.students.from}>
         <BRoll src={staticFile("kiut/students.mp4")} dur={BROLL.students.to - BROLL.students.from} />
       </Sequence>
-      <Sequence name="B-roll: laboratoriya" from={BROLL.lab.from} durationInFrames={BROLL.lab.to - BROLL.lab.from}>
-        <BRoll src={staticFile("kiut/lab.mp4")} dur={BROLL.lab.to - BROLL.lab.from} zoom={[1.0, 1.1]} />
+      <Sequence name="B-roll: amaliyot (C0062)" from={BROLL.practice.from} durationInFrames={BROLL.practice.to - BROLL.practice.from}>
+        <BRoll src={staticFile("kiut/practice.mp4")} dur={BROLL.practice.to - BROLL.practice.from} zoom={[1.0, 1.08]} />
       </Sequence>
 
       {/* soft vignette + bottom shade for readable white text */}
@@ -182,10 +271,17 @@ export const Kiut: React.FC = () => {
       <AbsoluteFill style={{ background: "linear-gradient(180deg, transparent 48%, rgba(0,0,0,0.32) 62%, rgba(0,0,0,0.12) 100%)" }} />
 
       <Title />
-      <ReasonTag />
       <Captions />
-      <Sequence name="Lokatsiya" from={LOCATION.from} durationInFrames={LOCATION.to - LOCATION.from}>
-        <Location />
+      {NUMBERS.map(([a, b], i) => (
+        <Sequence key={i} name={`Raqam ${i + 1}`} from={a} durationInFrames={b - a}>
+          <NumberPop n={i + 1} dur={b - a} />
+        </Sequence>
+      ))}
+      <Sequence name="Metro" from={METRO.from} durationInFrames={METRO.to - METRO.from}>
+        <Metro dur={METRO.to - METRO.from} />
+      </Sequence>
+      <Sequence name="Outro: obuna" from={OUTRO.from} durationInFrames={OUTRO.to - OUTRO.from}>
+        <Outro dur={OUTRO.to - OUTRO.from} />
       </Sequence>
 
       <Audio name="Voice 1" src={VOICE} trimBefore={0} from={0} durationInFrames={129} />
@@ -198,8 +294,7 @@ export const Kiut: React.FC = () => {
       <Audio name="Voice 8" src={VOICE} trimBefore={974} from={912} durationInFrames={18} />
       <Audio name="Voice 9" src={VOICE} trimBefore={1001} from={930} durationInFrames={29} />
       <Audio name="Voice 10" src={VOICE} trimBefore={1043} from={959} durationInFrames={448} />
-      <Audio name="Voice 11" src={VOICE} trimBefore={1498} from={1407} durationInFrames={51} />
-      <Audio name="Voice 12" src={VOICE} trimBefore={1560} from={1458} durationInFrames={96} />
+      <Audio name="Voice 11" src={VOICE} trimBefore={1498} from={1407} durationInFrames={161} />
 
       {/* EsDeeKid – Mist (extended intro): beat drop lands on "birinchi sababi" */}
       <Audio name="Music: EsDeeKid - Mist" src={staticFile("kiut/music.wav")} volume={(f) => (f < 82 ? 1.6 : 1.0)} />
