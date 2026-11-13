@@ -46,10 +46,11 @@ const Camera: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <AbsoluteFill style={{ transform: `scale(${s})`, transformOrigin: `${FACE.cx}px ${FACE.cy}px` }}>{children}</AbsoluteFill>;
 };
 
-const BRoll: React.FC<{ src: string; dur: number; zoom?: [number, number] }> = ({ src, dur, zoom = [1.0, 1.08] }) => {
+const BRoll: React.FC<{ src: string; dur: number; zoom?: [number, number]; cut?: boolean }> = ({ src, dur, zoom = [1.0, 1.08], cut = false }) => {
   const f = useCurrentFrame();
   const s = interpolate(f, [0, dur], zoom);
-  const o = interpolate(f, [0, 4], [0, 1], clamp);
+  // Hard cut when following another B-roll, so the speaker never flashes through.
+  const o = cut ? 1 : interpolate(f, [0, 4], [0, 1], clamp);
   return (
     <AbsoluteFill style={{ opacity: o, transform: `scale(${s})` }}>
       <Video src={src} muted style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -340,10 +341,10 @@ export const Kiut2: React.FC = () => {
           <BRoll src={F("teacher.mp4")} dur={d(BROLL.teacher)} />
         </Seq>
         <Seq name="Professorlar" r={BROLL.profs}>
-          <BRoll src={F("profs_v.mp4")} dur={d(BROLL.profs)} zoom={[1.0, 1.05]} />
+          <BRoll src={F("profs_v.mp4")} dur={d(BROLL.profs)} zoom={[1.0, 1.05]} cut />
         </Seq>
         <Seq name="Talabalar" r={BROLL.students}>
-          <BRoll src={F("students.mp4")} dur={d(BROLL.students)} />
+          <BRoll src={F("students.mp4")} dur={d(BROLL.students)} cut />
         </Seq>
         <Seq name="Darsda o‘qish" r={BROLL.classroom}>
           <BRoll src={F("classroom.mp4")} dur={d(BROLL.classroom)} />
@@ -352,7 +353,7 @@ export const Kiut2: React.FC = () => {
           <BRoll src={F("handson.mp4")} dur={d(BROLL.handson)} />
         </Seq>
         <Seq name="Laboratoriya" r={BROLL.lab}>
-          <BRoll src={F("lab.mp4")} dur={d(BROLL.lab)} zoom={[1.0, 1.1]} />
+          <BRoll src={F("lab.mp4")} dur={d(BROLL.lab)} zoom={[1.0, 1.1]} cut />
         </Seq>
       </AbsoluteFill>
 
