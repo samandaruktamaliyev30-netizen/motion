@@ -229,52 +229,18 @@ const NumberPop: React.FC<{ n: number; dur: number }> = ({ n, dur }) => {
 };
 
 /* ---------------- split screen: speaker on top, metro motion below ---------------- */
+// Bottom half: real metro footage (overground station with the "M" sign) + label.
 const MetroPanel: React.FC<{ dur: number }> = ({ dur }) => {
   const f = useCurrentFrame();
-  const W = 1080;
-  const H = 960;
-  const train = interpolate(f, [4, 34], [1, 0], { ...clamp, easing: Easing.bezier(0.15, 0.85, 0.25, 1) });
-  const speedLines = interpolate(f, [4, 34], [1, 0], clamp);
-  const sign = interpolate(f, [26, 40], [0, 1], { ...clamp, easing: Easing.out(Easing.back(1.8)) });
-  const text = interpolate(f, [34, 46], [0, 1], { ...clamp, easing: EASE });
-  const doors = interpolate(f, [40, 52], [0, 1], { ...clamp, easing: EASE });
-  const trainW = 1500;
-  const trainX = (W - trainW) / 2 + train * 1700;
+  const s = interpolate(f, [0, dur], [1.0, 1.08]);
+  const text = interpolate(f, [12, 24], [0, 1], { ...clamp, easing: EASE });
   return (
-    <div style={{ position: "relative", width: W, height: H, overflow: "hidden", background: "linear-gradient(180deg, #13233A 0%, #0B1524 70%, #070D17 100%)" }}>
-      {/* tunnel light strips */}
-      {[0, 1, 2, 3, 4, 5].map((i) => (
-        <div key={i} style={{ position: "absolute", top: 70, left: ((i * 260 - f * 40 * speedLines) % 1560) - 240, width: 160, height: 10, borderRadius: 5, background: "rgba(255,240,210,0.7)", boxShadow: "0 0 24px rgba(255,230,190,0.8)" }} />
-      ))}
-      {/* platform */}
-      <div style={{ position: "absolute", left: 0, right: 0, top: 640, height: 320, background: "linear-gradient(180deg, #2A3445, #1A2230)" }} />
-      <div style={{ position: "absolute", left: 0, right: 0, top: 640, height: 14, background: "repeating-linear-gradient(90deg, #E8E8E8 0 40px, #9AA3B0 40px 80px)" }} />
-      {/* speed lines */}
-      {[180, 260, 360, 470].map((y, i) => (
-        <div key={i} style={{ position: "absolute", top: y, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${0.5 * speedLines}), transparent)`, transform: `translateX(${(i % 2 ? -1 : 1) * 200 * speedLines}px)` }} />
-      ))}
-      {/* train */}
-      <div style={{ position: "absolute", top: 200, left: trainX, width: trainW, height: 420, borderRadius: "60px 60px 18px 18px", background: "linear-gradient(180deg, #F4F6F8 0%, #D5DAE0 60%, #AEB6C1 100%)", boxShadow: "0 30px 60px rgba(0,0,0,0.5)", filter: `blur(${speedLines * 6}px)` }}>
-        <div style={{ position: "absolute", top: 70, left: 0, right: 0, height: 10, background: "#2F6BFF" }} />
-        <div style={{ position: "absolute", top: 110, left: 60, right: 60, display: "flex", justifyContent: "space-between" }}>
-          {Array.from({ length: 7 }).map((_, i) => (
-            <div key={i} style={{ width: 150, height: 110, borderRadius: 14, background: "linear-gradient(180deg, #2B3A52, #141C2A)", boxShadow: "inset 0 0 0 3px rgba(255,255,255,0.15)" }} />
-          ))}
-        </div>
-        {/* doors open on arrival */}
-        <div style={{ position: "absolute", top: 250, left: trainW / 2 - 120, width: 240, height: 170, display: "flex", justifyContent: "center", background: "#0E1522" }}>
-          <div style={{ width: 120 * (1 - doors), height: "100%", background: "#C9D0D8", borderRight: "2px solid #8A939F" }} />
-          <div style={{ flex: 1 }} />
-          <div style={{ width: 120 * (1 - doors), height: "100%", background: "#C9D0D8", borderLeft: "2px solid #8A939F" }} />
-        </div>
-      </div>
-      {/* station sign */}
-      <div style={{ position: "absolute", top: 92, left: 60, display: "flex", alignItems: "center", gap: 18, opacity: sign, transform: `scale(${0.6 + 0.4 * sign})`, transformOrigin: "left center" }}>
-        <div style={{ width: 92, height: 92, borderRadius: 46, background: "white", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: INTER, fontWeight: 900, fontSize: 56, color: "#2F6BFF" }}>M</div>
-        <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 44, color: "white", textShadow: SHADOW }}>Metro</div>
-      </div>
-      {/* caption */}
-      <div style={{ position: "absolute", left: 0, right: 0, top: 720, textAlign: "center", opacity: text, transform: `translateY(${(1 - text) * 20}px)` }}>
+    <div style={{ position: "relative", width: 1080, height: 960, overflow: "hidden", backgroundColor: "black" }}>
+      <AbsoluteFill style={{ transform: `scale(${s})`, filter: GRADE }}>
+        <Video src={F("metro.mp4")} muted style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </AbsoluteFill>
+      <AbsoluteFill style={{ background: "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.55) 100%)" }} />
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 70, textAlign: "center", opacity: text, transform: `translateY(${(1 - text) * 20}px)` }}>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 16, fontFamily: INTER, fontWeight: 700, fontSize: 60, color: "white", letterSpacing: -0.6, textShadow: SHADOW }}>
           <svg width={56} height={56} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
