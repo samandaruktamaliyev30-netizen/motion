@@ -2,10 +2,11 @@ import React from "react";
 import { AbsoluteFill, interpolate, Sequence, staticFile, useCurrentFrame } from "remotion";
 import { Audio } from "@remotion/media";
 import { noise2D } from "@remotion/noise";
+import { Instagram } from "lucide-react";
 import { beatPulse, DROP, DURATION, SCENES, SceneId } from "./timeline";
 import { Background } from "./Background";
 import { Headline } from "./Headline";
-import { clamp } from "./kit";
+import { clamp, INTER } from "./kit";
 import { Aksincha, Blame, Cause, Miracle, NoResult, Spend } from "./Scenes1";
 import { Funnel, Industries, NoBuy, PathScene, Question, Sales, Secrets, Steps, Strategy, Subscribe } from "./Scenes2";
 
@@ -69,6 +70,34 @@ const DropFlash: React.FC = () => {
   return f >= DROP && o > 0 ? <AbsoluteFill style={{ background: "white", opacity: o }} /> : null;
 };
 
+// Author watermark (anti-reupload): stays on screen for the whole video, low in the frame.
+const Handle: React.FC = () => (
+  <AbsoluteFill style={{ alignItems: "center", pointerEvents: "none" }}>
+    <div
+      style={{
+        position: "absolute",
+        top: 1655,
+        display: "flex",
+        alignItems: "center",
+        gap: 14,
+        padding: "12px 26px 12px 18px",
+        borderRadius: 999,
+        background: "rgba(0,0,0,0.38)",
+        border: "1.5px solid rgba(255,255,255,0.18)",
+        fontFamily: INTER,
+        fontSize: 34,
+        fontWeight: 600,
+        color: "rgba(255,255,255,0.88)",
+        letterSpacing: 0.2,
+        textShadow: "0 2px 8px rgba(0,0,0,0.5)",
+      }}
+    >
+      <Instagram size={36} color="rgba(255,255,255,0.9)" strokeWidth={2.2} />
+      @samandar_uktamal1yev
+    </div>
+  </AbsoluteFill>
+);
+
 export const Ov: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: "black" }}>
     <Background />
@@ -86,6 +115,7 @@ export const Ov: React.FC = () => (
       <Headline />
     </Camera>
     <DropFlash />
+    <Handle />
     <Audio name="Voice-over (cleaned)" src={staticFile("ov/voice.wav")} />
     <Audio name="Music: EsDeeKid – Mist (from 10 s, drop on AKSINCHA)" src={staticFile("ov/music.wav")} />
   </AbsoluteFill>
