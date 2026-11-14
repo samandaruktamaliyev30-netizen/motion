@@ -6,6 +6,7 @@ import { PAGES } from "../reel/captions";
 import { fontFamily as MONT } from "../reel/ui";
 import { IconBell, IconCheck, IconHeart, IconSend, IconX } from "../reel/Icons";
 import { toNewAlphabet as N } from "../kiut2/alphabet";
+import { Phrase, StyleCaptions } from "../shared/StyleCaptions";
 
 // "Milliy sertifikat bekor bo‘ladimi?" — v2 edit inspired by (not copied from) the reference.
 const RAW = staticFile("raw.mp4");
@@ -253,55 +254,9 @@ const Subscribe: React.FC<{ dur: number }> = ({ dur }) => {
   );
 };
 
-/* ---------------- captions: new alphabet, sliding highlight ---------------- */
-const Captions: React.FC = () => {
-  const f = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  if (HIDE_CAPTIONS.some((r) => f >= r.from && f < r.to)) return null;
-  const page = PAGES.find((p) => f >= p.from && f < p.to);
-  if (!page) return null;
-  const enter = spring({ frame: f - page.from, fps, config: { damping: 15, stiffness: 210, mass: 0.6 } });
-  const active = page.words.reduce((acc, w, i) => (f >= w.from ? i : acc), 0);
-  // On photos with a certificate in the middle, captions move up so they never cover it.
-  const onPhoto = [T.student, T.celebrate].some((r) => f >= r.from && f < r.to);
-  return (
-    <div style={{ position: "absolute", top: onPhoto ? 250 : LOW + 20, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
-      <div style={{ width: 880, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "8px 16px", opacity: Math.min(1, enter * 1.5), transform: `translateY(${(1 - enter) * 34}px)` }}>
-        {page.words.map((w, i) => {
-          const seen = f >= w.from;
-          const isA = i === active;
-          const k = spring({ frame: f - w.from, fps, config: { damping: 14, stiffness: 260 } });
-          // highlight bar grows behind the active word
-          const bar = isA ? interpolate(f - w.from, [0, 5], [0, 1], { ...clamp, easing: EASE }) : 0;
-          return (
-            <span key={i} style={{ position: "relative", display: "inline-block", padding: "0 10px" }}>
-              <span style={{ position: "absolute", left: 0, right: 0, top: "12%", bottom: "4%", borderRadius: 16, background: w.key ? YELLOW : "#2F6BFF", transform: `scaleX(${bar})`, transformOrigin: "left center", boxShadow: bar ? "0 8px 24px rgba(0,0,0,0.3)" : "none" }} />
-              <span
-                style={{
-                  position: "relative",
-                  fontFamily: MONT,
-                  fontWeight: 900,
-                  fontSize: 78,
-                  lineHeight: 1.15,
-                  letterSpacing: -1,
-                  color: isA && w.key ? "#111" : w.key && seen ? YELLOW : "white",
-                  opacity: seen ? 1 : 0.45,
-                  display: "inline-block",
-                  transform: `translateY(${seen ? (1 - k) * 18 : 0}px) scale(${isA ? 1 + 0.06 * k : 1})`,
-                  WebkitTextStroke: isA ? "0px" : "10px rgba(10,14,30,0.9)",
-                  paintOrder: "stroke fill",
-                  textShadow: isA ? "none" : "0 6px 20px rgba(0,0,0,0.45)",
-                }}
-              >
-                {N(w.text)}
-              </span>
-            </span>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
+/* ---------------- captions: house style (shared), fixed position ---------------- */
+const PHRASES: Phrase[] = PAGES.map((p) => ({ from: p.from, to: p.to, text: p.words.map((w) => w.text).join(" ") }));
+const CAPTION_HIDE: [number, number][] = HIDE_CAPTIONS.map((r) => [r.from, r.to]);
 
 /* ---------------- sound design ---------------- */
 const SFX: [number, string, number][] = [
@@ -388,7 +343,7 @@ export const Reel2: React.FC = () => (
       <Subscribe dur={d(T.subscribe)} />
     </Seq>
 
-    <Captions />
+    <StyleCaptions phrases={PHRASES} top={LOW + 20} hide={CAPTION_HIDE} />
 
     <Audio name="Voice 1" src={VOICE} trimBefore={0} from={0} durationInFrames={126} />
     <Audio name="Voice 2" src={VOICE} trimBefore={141} from={126} durationInFrames={448} />
