@@ -5,6 +5,7 @@ import { Med } from "./med/Med";
 import { DURATION as MED_DURATION } from "./med/timeline";
 import { Kiut, KIUT_DURATION } from "./kiut/Kiut";
 import { Kiut2, KIUT2_DURATION } from "./kiut2/Kiut2";
+import { Reel2, REEL2_DURATION } from "./reel2/Reel2";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ export const RemotionRoot: React.FC = () => {
       />
       <Composition id="NegaKIUT" component={Kiut} durationInFrames={KIUT_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="KIUT" component={Kiut2} durationInFrames={KIUT2_DURATION} fps={30} width={1080} height={1920} />
+      <Composition id="MilliySertifikat2" component={Reel2} durationInFrames={REEL2_DURATION} fps={30} width={1080} height={1920} />
     </>
   );
 };
