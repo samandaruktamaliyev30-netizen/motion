@@ -13,7 +13,7 @@ const HIDE: [number, number][] = Object.values(M).map(([a, b]) => [a, b]);
 // teacher's experience -> "I forgot, I got it long ago" -> then why give it? -> conclusion.
 const RAW = staticFile("v5/raw.mp4");
 const VOICE = staticFile("v5/voice.wav");
-export const DURATION = 1272;
+export const DURATION = 1294; // last sentence plays to the very end ("…degani emas."), then fade
 
 // Speaker's face in 1080×1920 space (OpenCV median): x≈625, forehead≈342, chin≈765 (max 860).
 const FACE = { cx: 610, cy: 555 };
@@ -31,7 +31,7 @@ const SHOTS: [number, number, number, number][] = [
   [911, 1053, 1.2, 1.24],
   [1053, 1161, 1.05, 1.09],
   [1161, 1218, 1.25, 1.27],
-  [1218, 1272, 1.1, 1.16],
+  [1218, 1294, 1.1, 1.17],
 ];
 
 const PHRASES: Phrase[] = [
@@ -55,7 +55,7 @@ const PHRASES: Phrase[] = [
   { from: 1053, to: 1119, text: "Rostdan shunaqa holat bo‘layotgan bo‘lsa," },
   { from: 1119, to: 1161, text: "unda sertifikat berib nima qilamiz?" },
   { from: 1161, to: 1218, text: "Menimcha, sertifikat degan narsa" },
-  { from: 1218, to: 1272, text: "hali zo‘r degani emas." },
+  { from: 1218, to: 1284, text: "hali zo‘r degani emas." },
 ];
 
 const Camera: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -79,7 +79,7 @@ const A: React.FC<{ name: string; trimBefore: number; from: number; dur: number 
 
 export const Sertifikat3: React.FC = () => {
   const f = useCurrentFrame();
-  const endFade = interpolate(f, [DURATION - 12, DURATION], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const endFade = interpolate(f, [1277, DURATION], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <AbsoluteFill style={{ backgroundColor: "black" }}>
       <Camera>
@@ -94,7 +94,7 @@ export const Sertifikat3: React.FC = () => {
         <V name="H — nahotki" trimBefore={2911} from={911} dur={142} />
         <V name="I — nima qilamiz" trimBefore={3058} from={1053} dur={108} />
         <V name="J1 — menimcha" trimBefore={1648} from={1161} dur={57} />
-        <V name="J2 — zo‘r degani emas" trimBefore={1714} from={1218} dur={54} />
+        <V name="J2 — zo‘r degani emas" trimBefore={1714} from={1218} dur={76} />
       </Camera>
 
       <AbsoluteFill style={{ background: "radial-gradient(ellipse at 55% 35%, transparent 50%, rgba(0,0,0,0.4) 100%)" }} />
@@ -129,7 +129,7 @@ export const Sertifikat3: React.FC = () => {
       <A name="Voice H" trimBefore={2911} from={911} dur={142} />
       <A name="Voice I" trimBefore={3058} from={1053} dur={108} />
       <A name="Voice J1" trimBefore={1648} from={1161} dur={57} />
-      <A name="Voice J2" trimBefore={1714} from={1218} dur={54} />
+      <A name="Voice J2" trimBefore={1714} from={1218} dur={76} />
 
       {/* EsDeeKid – Mist: quiet intro, beat drops on the "I forgot it" story */}
       <Audio name="Music: EsDeeKid - Mist" src={staticFile("v5/music.wav")} volume={(fr) => (fr < 693 ? 0.6 : 0.33)} />
