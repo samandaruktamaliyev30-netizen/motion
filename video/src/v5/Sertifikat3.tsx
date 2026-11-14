@@ -1,7 +1,12 @@
 import React from "react";
-import { AbsoluteFill, interpolate, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, interpolate, Sequence, staticFile, useCurrentFrame } from "remotion";
 import { Audio, Video } from "@remotion/media";
 import { Phrase, StyleCaptions } from "../shared/StyleCaptions";
+import { ChatBubble, Compare, NotEqual, ThreeYears } from "./Motion";
+
+// Motion inserts [from, to]; subtitles are hidden while one is on screen.
+const M = { notEqual: [38, 100], compare: [241, 370], chat: [693, 825], years: [870, 911] } as const;
+const HIDE: [number, number][] = Object.values(M).map(([a, b]) => [a, b]);
 
 // 2:04 interview cut down to ~42 s. Segments chosen to tell one story:
 // system doesn't think long-term -> certificate ≠ knowledge -> everything tied to it ->
@@ -96,7 +101,20 @@ export const Sertifikat3: React.FC = () => {
       <AbsoluteFill style={{ background: "linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.12) 100%)" }} />
 
       {/* House subtitle style, fixed below the chin */}
-      <StyleCaptions phrases={PHRASES} top={980} />
+      <StyleCaptions phrases={PHRASES} top={980} hide={HIDE} />
+
+      <Sequence name="Sertifikat ≠ Bilim" from={M.notEqual[0]} durationInFrames={M.notEqual[1] - M.notEqual[0]}>
+        <NotEqual dur={M.notEqual[1] - M.notEqual[0]} />
+      </Sequence>
+      <Sequence name="Sertifikatli / Sertifikatsiz" from={M.compare[0]} durationInFrames={M.compare[1] - M.compare[0]}>
+        <Compare dur={M.compare[1] - M.compare[0]} secondAt={60} />
+      </Sequence>
+      <Sequence name="Talaba xabari" from={M.chat[0]} durationInFrames={M.chat[1] - M.chat[0]}>
+        <ChatBubble dur={M.chat[1] - M.chat[0]} />
+      </Sequence>
+      <Sequence name="3 yil" from={M.years[0]} durationInFrames={M.years[1] - M.years[0]}>
+        <ThreeYears dur={M.years[1] - M.years[0]} />
+      </Sequence>
 
       <AbsoluteFill style={{ backgroundColor: "black", opacity: endFade }} />
 
@@ -114,7 +132,7 @@ export const Sertifikat3: React.FC = () => {
       <A name="Voice J2" trimBefore={1714} from={1218} dur={54} />
 
       {/* EsDeeKid – Mist: quiet intro, beat drops on the "I forgot it" story */}
-      <Audio name="Music: EsDeeKid - Mist" src={staticFile("v5/music.wav")} volume={(fr) => (fr < 693 ? 1.0 : 0.56)} />
+      <Audio name="Music: EsDeeKid - Mist" src={staticFile("v5/music.wav")} volume={(fr) => (fr < 693 ? 0.6 : 0.33)} />
     </AbsoluteFill>
   );
 };
