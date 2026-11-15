@@ -53,55 +53,76 @@ const Pop: React.FC<{ delay: number; children: React.ReactNode; style?: React.CS
   return <div style={{ transform: `scale(${s}) translateY(${(1 - s) * 30}px)`, opacity: Math.min(1, s * 1.5), ...style }}>{children}</div>;
 };
 
-/* ---------- 1. title: NEGA BIZNES / YAXŞI / RIVOJLANMAYDI (0–3.2 s) ---------- */
+/* ---------- 1. title in a framed card (reference "OLDIN BOY" style), 0–3.2 s ---------- */
+const ROYAL = "#2A3BD8";
 export const Title: React.FC<{ dur: number }> = ({ dur }) => {
   const f = useCurrentFrame();
-  const outAt = dur - 10; // ≈ 2.87 s; gone by 3.2 s
-  const lines = [
-    { t: "NEGA BIZNES", size: 104, d: 2 },
-    { t: N("YAXSHI"), size: 128, d: 7, accent: true },
-    { t: "RIVOJLANMAYDI", size: 104, d: 12 },
-  ];
+  const { fps } = useVideoConfig();
+  const outAt = dur - 10; // leaves at ≈ 2.9 s, gone by 3.2 s
+  const card = spring({ frame: f, fps, config: { damping: 14, stiffness: 160 } });
+  const open = interpolate(f, [0, 9], [0, 1], { ...clamp, easing: EASE });
+  const border = interpolate(f, [4, 20], [0, 1], { ...clamp, easing: Easing.inOut(Easing.cubic) });
+  const o = interpolate(f, [outAt, outAt + 9], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
+  const shine = interpolate(f, [20, 42], [-40, 140], clamp);
+  const badge = spring({ frame: f - 22, fps, config: { damping: 9, stiffness: 220 } });
   const back = Math.min(interpolate(f, [0, 8], [0, 1], clamp), interpolate(f, [outAt + 2, dur], [1, 0], clamp));
-  const shine = interpolate(f, [18, 40], [-30, 130], clamp);
+  const lines = [
+    { t: "NEGA BIZNES", size: 92, d: 6 },
+    { t: N("YAXSHI"), size: 112, d: 10, accent: true },
+    { t: "RIVOJLANMAYDI", size: 92, d: 14 },
+  ];
   return (
     <>
-      <div style={{ position: "absolute", left: 0, right: 0, top: LOW - 140, height: 1920 - LOW + 140, background: "linear-gradient(180deg, transparent, rgba(5,8,14,0.55) 30%, rgba(5,8,14,0.7))", opacity: back }} />
-      <div style={{ position: "absolute", top: LOW - 30, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-        {lines.map((l, i) => {
-          const k = interpolate(f, [l.d, l.d + 12], [0, 1], { ...clamp, easing: EASE });
-          // exit: each line whips sideways with motion blur, staggered
-          const o = interpolate(f, [outAt + i * 2, outAt + i * 2 + 8], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
-          const dir = i % 2 === 0 ? -1 : 1;
-          const hl = interpolate(f, [l.d + 6, l.d + 16], [0, 1], { ...clamp, easing: EASE });
-          return (
-            <div key={i} style={{ position: "relative", overflow: "hidden", padding: "4px 26px 10px" }}>
-              {l.accent ? (
-                <div style={{ position: "absolute", left: 10, right: 10, top: 14, bottom: 14, background: GOLD, borderRadius: 18, transformOrigin: "left center", transform: `scaleX(${hl * (1 - o)}) skewX(-6deg)` }} />
-              ) : null}
-              <div
-                style={{
-                  position: "relative",
-                  fontFamily: INTER,
-                  fontWeight: 900,
-                  fontSize: l.size,
-                  lineHeight: 1.0,
-                  letterSpacing: -2,
-                  color: l.accent ? INK : "white",
-                  textShadow: l.accent ? "none" : "0 6px 24px rgba(0,0,0,0.55)",
-                  transform: `translateY(${(1 - k) * 110}%) translateX(${o * dir * 900}px) skewX(${o * dir * -12}deg)`,
-                  filter: `blur(${(1 - k) * 8 + o * 14}px)`,
-                  opacity: k * (1 - o * 0.9),
-                }}
-              >
-                {l.t}
-              </div>
-              {!l.accent ? (
-                <div style={{ position: "absolute", top: 0, bottom: 0, left: `${shine}%`, width: "18%", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)", transform: "skewX(-20deg)", mixBlendMode: "overlay", opacity: 1 - o }} />
-              ) : null}
-            </div>
-          );
-        })}
+      <div style={{ position: "absolute", left: 0, right: 0, top: LOW - 160, height: 1920 - LOW + 160, background: "linear-gradient(180deg, transparent, rgba(5,8,14,0.5) 30%, rgba(5,8,14,0.65))", opacity: back }} />
+      <div style={{ position: "absolute", top: LOW - 20, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
+            position: "relative",
+            transform: `translateX(${-o * 1100}px) rotate(${-2.5 - (1 - card) * 6 - o * 8}deg) scale(${0.7 + card * 0.3})`,
+            filter: `blur(${o * 12}px)`,
+            opacity: 1 - o * 0.6,
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              background: `linear-gradient(160deg, #3447E6, ${ROYAL} 55%, #1E2BA8)`,
+              borderRadius: 18,
+              padding: "26px 46px 30px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 4,
+              overflow: "hidden",
+              boxShadow: "0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.25)",
+              clipPath: `inset(0 ${(1 - open) * 50}% 0 ${(1 - open) * 50}% round 18px)`,
+            }}
+          >
+            {lines.map((l, i) => {
+              const k = interpolate(f, [l.d, l.d + 11], [0, 1], { ...clamp, easing: EASE });
+              const hl = interpolate(f, [l.d + 4, l.d + 14], [0, 1], { ...clamp, easing: EASE });
+              return (
+                <div key={i} style={{ position: "relative", overflow: "hidden", padding: l.accent ? "6px 24px 10px" : "0 6px 6px" }}>
+                  {l.accent ? (
+                    <div style={{ position: "absolute", inset: "8px 4px", background: GOLD, borderRadius: 12, transformOrigin: "left center", transform: `scaleX(${hl})` }} />
+                  ) : null}
+                  <div style={{ position: "relative", fontFamily: INTER, fontWeight: 900, fontSize: l.size, lineHeight: 1.0, letterSpacing: -1.5, color: l.accent ? INK : "white", transform: `translateY(${(1 - k) * 110}%)`, opacity: k, textShadow: l.accent ? "none" : "0 3px 0 rgba(0,0,0,0.18)" }}>
+                    {l.t}
+                  </div>
+                </div>
+              );
+            })}
+            <div style={{ position: "absolute", top: 0, bottom: 0, left: `${shine}%`, width: "22%", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent)", transform: "skewX(-20deg)" }} />
+          </div>
+          {/* white frame drawn around the card */}
+          <svg style={{ position: "absolute", inset: -9, width: "calc(100% + 18px)", height: "calc(100% + 18px)", overflow: "visible" }}>
+            <rect x={3} y={3} rx={24} pathLength={1} style={{ width: "calc(100% - 6px)", height: "calc(100% - 6px)" }} fill="none" stroke="white" strokeWidth={6} strokeDasharray="1 1" strokeDashoffset={1 - border} />
+          </svg>
+          {/* question badge */}
+          <div style={{ position: "absolute", top: -34, right: -30, width: 76, height: 76, borderRadius: 38, background: RED, border: "5px solid white", display: "flex", alignItems: "center", justifyContent: "center", transform: `scale(${f >= 22 ? badge : 0}) rotate(${(1 - badge) * -40 + 10}deg)`, boxShadow: "0 10px 24px rgba(0,0,0,0.45)" }}>
+            <span style={{ fontFamily: INTER, fontWeight: 900, fontSize: 48, color: "white", marginTop: -4 }}>?</span>
+          </div>
+        </div>
       </div>
     </>
   );

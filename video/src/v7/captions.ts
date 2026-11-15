@@ -16,7 +16,7 @@ const SRC: [number, string, number?][] = [
   [24.62, "rivojlantirish o‘rniga"],
   [26.14, "kundalik muammolarni hal qilish"],
   [28.3, "bilan band bo‘ladi."],
-  [29.96, "Hozirgi kunda juda ko‘p", 31.45],
+  [30.33, "Hozirgi kunda juda ko‘p", 31.45],
   [33.96, "Men ushbu bizneslar uchun", 35.55],
   [39.56, "Bu qo‘llanma ichida xodimlarni"],
   [41.6, "boshqarish bo‘yicha barcha ma’lumotlar bor."],
