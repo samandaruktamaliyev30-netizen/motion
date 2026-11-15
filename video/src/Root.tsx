@@ -79,6 +79,15 @@ export const RemotionRoot: React.FC = () => {
         height={1920}
         defaultProps={{ transparent: true }}
       />
+      <Composition
+        id="NanoMarketing3Key"
+        component={Nano3}
+        durationInFrames={NANO3_DURATION}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{ keyColor: "#FF00FF" }}
+      />
     </>
   );
 };

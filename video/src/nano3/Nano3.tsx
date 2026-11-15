@@ -80,8 +80,12 @@ const SC = {
 
 /* ---------------- shared pieces ---------------- */
 // Alpha mode: rendered without background to overlay on the user's own footage.
+// Key mode: solid key-colour background for phone editors (CapCut "Chroma key"); cards opaque, no glows.
 const AlphaCtx = React.createContext(false);
+const KeyCtx = React.createContext(false);
 const useAlpha = () => React.useContext(AlphaCtx);
+const useKey = () => React.useContext(KeyCtx);
+const SOLID = "#10142A";
 const SHADOW = "0 3px 14px rgba(0,0,0,0.75), 0 1px 3px rgba(0,0,0,0.6)";
 
 const Txt: React.FC<{ size: number; color?: string; weight?: number; style?: React.CSSProperties; children: React.ReactNode }> = ({ size, color = C.white, weight = 800, style, children }) => {
@@ -92,10 +96,11 @@ const Txt: React.FC<{ size: number; color?: string; weight?: number; style?: Rea
 // Frosted glass — see-through: the background shows through the card.
 const Glass: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) => {
   const alpha = useAlpha();
+  const key = useKey();
   return (
     <div
       style={{
-        background: alpha ? "linear-gradient(160deg, rgba(14,18,40,0.55), rgba(8,10,22,0.38))" : C.glass,
+        background: key ? SOLID : alpha ? "linear-gradient(160deg, rgba(14,18,40,0.55), rgba(8,10,22,0.38))" : C.glass,
         border: C.border,
         borderRadius: 36,
         backdropFilter: "blur(10px)",
@@ -138,20 +143,22 @@ const Badge: React.FC<{ n: string; title: string; at?: number }> = ({ n, title, 
   return (
     <AbsoluteFill style={{ top: 250, height: "auto", alignItems: "center" }}>
       <div style={{ opacity: sp, transform: `translateY(${(1 - sp) * 40}px)`, textAlign: "center" }}>
-        <div style={{ display: "inline-block", padding: "10px 24px", borderRadius: 999, border: `1.5px solid ${C.lime}`, color: C.lime, fontFamily: INTER, fontWeight: 700, fontSize: 28, letterSpacing: 3 }}>XIZMAT {n}</div>
+        <div className="nostroke" style={{ display: "inline-block", padding: "10px 24px", borderRadius: 999, background: "#10142A", border: `1.5px solid ${C.lime}`, color: C.lime, fontFamily: INTER, fontWeight: 700, fontSize: 28, letterSpacing: 3 }}>XIZMAT {n}</div>
         <Txt size={112} style={{ marginTop: 22 }}>{title}</Txt>
       </div>
     </AbsoluteFill>
   );
 };
 
-const IconTile: React.FC<{ Icon: typeof Mic; size?: number; tone?: "blue" | "lime" | "glass" }> = ({ Icon, size = 150, tone = "blue" }) => (
+const IconTile: React.FC<{ Icon: typeof Mic; size?: number; tone?: "blue" | "lime" | "glass" }> = ({ Icon, size = 150, tone = "blue" }) => {
+  const key = useKey();
+  return (
   <div
     style={{
       width: size,
       height: size,
       borderRadius: size * 0.28,
-      background: tone === "blue" ? "linear-gradient(160deg,#6C8DFF,#2A49E0)" : tone === "lime" ? "linear-gradient(160deg,#E2FF8A,#9BD316)" : C.glass,
+      background: tone === "blue" ? "linear-gradient(160deg,#6C8DFF,#2A49E0)" : tone === "lime" ? "linear-gradient(160deg,#E2FF8A,#9BD316)" : key ? SOLID : C.glass,
       border: tone === "glass" ? C.border : "none",
       display: "flex",
       alignItems: "center",
@@ -161,7 +168,8 @@ const IconTile: React.FC<{ Icon: typeof Mic; size?: number; tone?: "blue" | "lim
   >
     <Icon size={size * 0.5} color={tone === "lime" ? C.ink : "#fff"} strokeWidth={2.1} />
   </div>
-);
+  );
+};
 
 const NanoMark: React.FC<{ size: number; draw?: number }> = ({ size, draw = 1 }) => (
   <svg width={size} height={size} viewBox="0 0 100 100" style={{ overflow: "visible", filter: `drop-shadow(0 0 30px rgba(61,107,255,0.7))` }}>
@@ -267,7 +275,7 @@ const Shaxsiy: React.FC = () => {
                     <BadgeCheck size={50} color={C.ink} fill={C.lime} />
                   </div>
                 </div>
-                <div style={{ marginTop: 10, display: "inline-block", padding: "8px 20px", borderRadius: 999, background: verified > 0.5 ? C.lime : "rgba(255,255,255,0.12)", color: verified > 0.5 ? C.ink : C.dim, fontWeight: 800, fontSize: 30 }}>
+                <div className="nostroke" style={{ marginTop: 10, display: "inline-block", padding: "8px 20px", borderRadius: 999, background: verified > 0.5 ? C.lime : "rgba(255,255,255,0.12)", color: verified > 0.5 ? C.ink : C.dim, fontWeight: 800, fontSize: 30 }}>
                   {verified > 0.5 ? "Ekspert" : "Mutaxassis"}
                 </div>
               </div>
@@ -406,7 +414,7 @@ const Perf: React.FC = () => {
         </div>
         <div style={{ position: "absolute", top: 1010, display: "flex", alignItems: "flex-end", gap: 18, height: 240, opacity: useSp(10) }}>
           {[0.25, 0.32, 0.3, 0.45, 0.55, 0.7, 0.85, 1].map((h, i) => (
-            <div key={i} style={{ width: 70, height: 240 * h * p(f, res + i * 2, res + 14 + i * 2) + 8, borderRadius: 12, background: i === 7 ? C.lime : "rgba(124,150,255,0.75)" }} />
+            <div key={i} style={{ width: 70, height: 240 * h * p(f, res + i * 2, res + 14 + i * 2) + 8, borderRadius: 12, background: i === 7 ? C.lime : "#6F86E8" }} />
           ))}
         </div>
       </AbsoluteFill>
@@ -537,7 +545,7 @@ const Cta: React.FC = () => {
         </Txt>
       </div>
       <div style={{ position: "absolute", top: 880, overflow: "hidden", borderRadius: 999, transform: `scale(${0.6 + 0.4 * btn})`, opacity: btn }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 18, padding: "36px 74px", borderRadius: 999, background: C.lime, color: C.ink, fontFamily: INTER, fontWeight: 800, fontSize: 56, boxShadow: `0 0 80px ${C.lime}77` }}>
+        <div className="nostroke" style={{ display: "flex", alignItems: "center", gap: 18, padding: "36px 74px", borderRadius: 999, background: C.lime, color: C.ink, fontFamily: INTER, fontWeight: 800, fontSize: 56, boxShadow: `0 0 80px ${C.lime}77` }}>
           <Send size={52} color={C.ink} strokeWidth={2.6} /> BEPUL MASLAHAT
         </div>
         {f > 24 && <div style={{ position: "absolute", top: 0, bottom: 0, width: 140, left: -200 + shine * 1100, background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent)", transform: "skewX(-20deg)" }} />}
@@ -565,11 +573,12 @@ const Wrap: React.FC<{ dur: number; first: boolean; last: boolean; children: Rea
 // Anti-reupload handle: small and low for the whole video, hidden on the end card (which shows it large).
 const Watermark: React.FC = () => {
   const f = useCurrentFrame();
+  const key = useKey();
   const o = 1 - p(f, s(SC.cta[0]) - 6, s(SC.cta[0]) + 4);
   if (o <= 0) return null;
   return (
     <AbsoluteFill style={{ alignItems: "center", pointerEvents: "none" }}>
-      <div style={{ position: "absolute", top: 1660, display: "flex", alignItems: "center", gap: 12, padding: "10px 24px 10px 16px", borderRadius: 999, background: "rgba(0,0,0,0.35)", border: "1.5px solid rgba(255,255,255,0.16)", opacity: o * 0.9 }}>
+      <div style={{ position: "absolute", top: 1660, display: "flex", alignItems: "center", gap: 12, padding: "10px 24px 10px 16px", borderRadius: 999, background: key ? SOLID : "rgba(0,0,0,0.35)", border: "1.5px solid rgba(255,255,255,0.16)", opacity: key ? 1 : o * 0.9 }}>
         <Instagram size={32} color="#fff" />
         <span style={{ fontFamily: INTER, fontWeight: 600, fontSize: 30, color: "rgba(255,255,255,0.9)" }}>{HANDLE}</span>
       </div>
@@ -577,12 +586,14 @@ const Watermark: React.FC = () => {
   );
 };
 
-export const Nano3: React.FC<{ transparent?: boolean }> = ({ transparent = false }) => {
+export const Nano3: React.FC<{ transparent?: boolean; keyColor?: string }> = ({ transparent = false, keyColor }) => {
   const keys = Object.keys(SC) as (keyof typeof SC)[];
   return (
-    <AlphaCtx.Provider value={transparent}>
-    <AbsoluteFill style={{ background: transparent ? "transparent" : C.ink }}>
-      {transparent ? null : <Space />}
+    <AlphaCtx.Provider value={transparent || !!keyColor}>
+    <KeyCtx.Provider value={!!keyColor}>
+    <AbsoluteFill style={{ background: keyColor ?? (transparent ? "transparent" : C.ink) }}>
+      {keyColor ? <style>{"*{box-shadow:none!important;text-shadow:none!important;filter:none!important;backdrop-filter:none!important;-webkit-text-stroke:7px #10142A;paint-order:stroke fill}.nostroke,.nostroke *{-webkit-text-stroke:0!important}"}</style> : null}
+      {transparent || keyColor ? null : <Space />}
       {keys.map((k, i) => {
         const [a, b] = SC[k];
         const El = MAP[k];
@@ -598,6 +609,7 @@ export const Nano3: React.FC<{ transparent?: boolean }> = ({ transparent = false
       <Audio name="Voice-over (own recording)" src={staticFile("nano/vo4.wav")} />
       <Audio name="Music: Pixeln World – Freedom (from 39.40 s)" src={staticFile("nano/music4.wav")} />
     </AbsoluteFill>
+    </KeyCtx.Provider>
     </AlphaCtx.Provider>
   );
 };
