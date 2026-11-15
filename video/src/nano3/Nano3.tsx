@@ -53,7 +53,7 @@ const C = {
   lime: "#C8FF3D",
   white: "#FFFFFF",
   dim: "rgba(255,255,255,0.62)",
-  glass: "linear-gradient(160deg, rgba(255,255,255,0.13), rgba(255,255,255,0.04))",
+  glass: "linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.015))",
   border: "1.5px solid rgba(255,255,255,0.16)",
 };
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -79,13 +79,36 @@ const SC = {
 } as const;
 
 /* ---------------- shared pieces ---------------- */
-const Txt: React.FC<{ size: number; color?: string; weight?: number; style?: React.CSSProperties; children: React.ReactNode }> = ({ size, color = C.white, weight = 800, style, children }) => (
-  <div style={{ fontFamily: INTER, fontSize: size, fontWeight: weight, color, letterSpacing: -size * 0.035, lineHeight: 1.05, ...style }}>{children}</div>
-);
+// Alpha mode: rendered without background to overlay on the user's own footage.
+const AlphaCtx = React.createContext(false);
+const useAlpha = () => React.useContext(AlphaCtx);
+const SHADOW = "0 3px 14px rgba(0,0,0,0.75), 0 1px 3px rgba(0,0,0,0.6)";
 
-const Glass: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) => (
-  <div style={{ background: C.glass, border: C.border, borderRadius: 36, boxShadow: "0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.12)", fontFamily: INTER, color: C.white, ...style }}>{children}</div>
-);
+const Txt: React.FC<{ size: number; color?: string; weight?: number; style?: React.CSSProperties; children: React.ReactNode }> = ({ size, color = C.white, weight = 800, style, children }) => {
+  const alpha = useAlpha();
+  return <div style={{ fontFamily: INTER, fontSize: size, fontWeight: weight, color, letterSpacing: -size * 0.035, lineHeight: 1.05, textShadow: alpha ? SHADOW : undefined, ...style }}>{children}</div>;
+};
+
+// Frosted glass — see-through: the background shows through the card.
+const Glass: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) => {
+  const alpha = useAlpha();
+  return (
+    <div
+      style={{
+        background: alpha ? "linear-gradient(160deg, rgba(14,18,40,0.55), rgba(8,10,22,0.38))" : C.glass,
+        border: C.border,
+        borderRadius: 36,
+        backdropFilter: "blur(10px)",
+        boxShadow: alpha ? "0 20px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.14)" : "0 20px 60px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12)",
+        fontFamily: INTER,
+        color: C.white,
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
 // Voice-synced caption: words of the voice-over between [from, to) seconds, each appears when spoken.
 const Spoken: React.FC<{ from: number; to: number; sceneStart: number; size?: number; accent?: string[]; top: number }> = ({ from, to, sceneStart, size = 54, accent = [], top }) => {
@@ -100,7 +123,7 @@ const Spoken: React.FC<{ from: number; to: number; sceneStart: number; size?: nu
           const sp = spring({ frame: f - st, fps, config: { damping: 18, stiffness: 160, mass: 0.6 } });
           const acc = accent.some((a) => w.w.toLowerCase().startsWith(a));
           return (
-            <span key={i} style={{ display: "inline-block", fontFamily: INTER, fontWeight: acc ? 800 : 600, fontSize: size, letterSpacing: -size * 0.02, color: acc ? C.lime : f >= st ? C.white : "rgba(255,255,255,0)", opacity: f >= st ? Math.min(1, sp * 1.3) : 0, transform: `translateY(${(1 - sp) * 22}px)` }}>
+            <span key={i} style={{ display: "inline-block", textShadow: SHADOW, fontFamily: INTER, fontWeight: acc ? 800 : 600, fontSize: size, letterSpacing: -size * 0.02, color: acc ? C.lime : f >= st ? C.white : "rgba(255,255,255,0)", opacity: f >= st ? Math.min(1, sp * 1.3) : 0, transform: `translateY(${(1 - sp) * 22}px)` }}>
               {w.w.replace(/[:]$/, "")}
             </span>
           );
@@ -493,6 +516,7 @@ const Team: React.FC = () => {
 
 const Cta: React.FC = () => {
   const f = useCurrentFrame();
+  const alpha = useAlpha();
   const logo = useSp(0);
   const btn = useSp(6, 13, 150);
   const h = useSp(20);
@@ -523,7 +547,7 @@ const Cta: React.FC = () => {
         <Txt size={50} weight={700} style={{ letterSpacing: -0.5 }}>{HANDLE}</Txt>
       </div>
       <Spoken from={34.1} to={36.2} sceneStart={33.95} size={52} accent={["direct"]} top={1260} />
-      <AbsoluteFill style={{ background: C.ink, opacity: fade }} />
+      {alpha ? null : <AbsoluteFill style={{ background: C.ink, opacity: fade }} />}
     </AbsoluteFill>
   );
 };
@@ -553,11 +577,12 @@ const Watermark: React.FC = () => {
   );
 };
 
-export const Nano3: React.FC = () => {
+export const Nano3: React.FC<{ transparent?: boolean }> = ({ transparent = false }) => {
   const keys = Object.keys(SC) as (keyof typeof SC)[];
   return (
-    <AbsoluteFill style={{ background: C.ink }}>
-      <Space />
+    <AlphaCtx.Provider value={transparent}>
+    <AbsoluteFill style={{ background: transparent ? "transparent" : C.ink }}>
+      {transparent ? null : <Space />}
       {keys.map((k, i) => {
         const [a, b] = SC[k];
         const El = MAP[k];
@@ -573,5 +598,6 @@ export const Nano3: React.FC = () => {
       <Audio name="Voice-over (own recording)" src={staticFile("nano/vo4.wav")} />
       <Audio name="Music: Pixeln World – Freedom (from 39.40 s)" src={staticFile("nano/music4.wav")} />
     </AbsoluteFill>
+    </AlphaCtx.Provider>
   );
 };
