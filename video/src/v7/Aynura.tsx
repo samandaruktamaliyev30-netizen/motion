@@ -3,7 +3,7 @@ import { AbsoluteFill, Img, interpolate, Sequence, staticFile, useCurrentFrame }
 import { Audio, Video } from "@remotion/media";
 import { at, CLIPS, DURATION, FACE, LOW, M, PICS, SHOTS, SPEECH_END } from "./timeline";
 import { PHRASES } from "./captions";
-import { StyleCaptions } from "../shared/StyleCaptions";
+import { PopCaptions } from "./PopCaptions";
 import { Fail, Goal, Order, Phone, Photo, Steps, Subscribe, Tired, Why } from "./Motion";
 
 const RAW = staticFile("v7/clean.mp4");
@@ -72,7 +72,7 @@ export const Aynura: React.FC = () => (
     <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 40%, transparent 50%, rgba(0,0,0,0.36) 100%)" }} />
     <AbsoluteFill style={{ background: "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.3) 72%, rgba(0,0,0,0.15) 100%)" }} />
 
-    <StyleCaptions phrases={PHRASES} top={LOW} hide={HIDE} />
+    <PopCaptions phrases={PHRASES} top={LOW + 10} hide={HIDE} />
 
     <S name="Ishlamaydi" r={M.fail}><Fail dur={d(M.fail)} /></S>
     <S name="Nimaga?" r={M.why}><Why dur={d(M.why)} /></S>
