@@ -40,6 +40,7 @@ export const PICS = {
 export const M = {
   fail: r(13.65, 15.0), // "u sizlarda ishlamaydi"
   why: r(15.0, 17.25), // "Bilasizlarmi, nimaga?"
+  first: r(39.0, 40.3), // "Birinchi navbatda" — full-screen card
   steps: r(42.9, 45.3), // "ong ostingiz bilan ishlash"
   goal: r(45.3, 47.95), // "maqsadingizga erisha olasiz"
   order: r(51.95, 53.0), // "ana undan keyin — texnika"

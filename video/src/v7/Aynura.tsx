@@ -1,14 +1,14 @@
 import React from "react";
-import { AbsoluteFill, Img, interpolate, Sequence, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Easing, Img, interpolate, Sequence, staticFile, useCurrentFrame } from "remotion";
 import { Audio, Video } from "@remotion/media";
 import { at, CLIPS, DURATION, FACE, LOW, M, PICS, SHOTS, SPEECH_END } from "./timeline";
 import { PHRASES } from "./captions";
-import { PopCaptions } from "./PopCaptions";
-import { Fail, Goal, Order, Phone, Photo, Steps, Subscribe, Tired, Why } from "./Motion";
+import { RefCaptions } from "./RefCaptions";
+import { Card, Chips, Fail, Goal, Order, Phone, Photo, Subscribe, Tired } from "./Motion";
 
 const RAW = staticFile("v7/clean.mp4");
 const VOICE = staticFile("v7/voice.wav");
-const GRADE = "contrast(1.07) saturate(1.08) brightness(1.02)";
+const GRADE = "contrast(1.12) saturate(0.95) brightness(0.97)";
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
 // Punch-in camera; a short zoom "bump" on every jump so cuts feel like the reference edits.
@@ -16,11 +16,35 @@ const Camera: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const f = useCurrentFrame();
   const shot = SHOTS.find(([a, b]) => f >= a && f < b);
   let s = 1.03;
+  let whip = 0;
+  let dir = 1;
   if (shot) {
     const [a, b, s0, s1] = shot;
-    s = interpolate(f, [a, b], [s0, s1], clamp) + interpolate(f, [a, a + 5], [0.035, 0], clamp);
+    whip = interpolate(f, [a, a + 6], [1, 0], { ...clamp, easing: Easing.out(Easing.cubic) });
+    dir = SHOTS.indexOf(shot) % 2 ? 1 : -1;
+    s = interpolate(f, [a, b], [s0, s1], clamp) + whip * 0.06;
   }
-  return <AbsoluteFill style={{ transform: `scale(${s})`, transformOrigin: `${FACE.cx}px ${FACE.cy}px`, filter: GRADE }}>{children}</AbsoluteFill>;
+  // whip-zoom on every cut: short vertical slide + motion blur (reference-style)
+  return (
+    <AbsoluteFill style={{ transform: `translateY(${whip * 45 * dir}px) scale(${s})`, transformOrigin: `${FACE.cx}px ${FACE.cy}px`, filter: `${GRADE} blur(${whip * 7}px)` }}>
+      {children}
+    </AbsoluteFill>
+  );
+};
+
+// Film grain + soft light leak breathing on the edge (cinematic look of the reference).
+const Grain: React.FC = () => {
+  const f = useCurrentFrame();
+  const x = ((f * 137) % 200) - 100;
+  const y = ((f * 71) % 200) - 100;
+  return (
+    <>
+      <AbsoluteFill style={{ mixBlendMode: "overlay", opacity: 0.16, transform: `translate(${x}px, ${y}px) scale(1.25)` }}>
+        <Img src={staticFile("v7/grain.png")} style={{ width: "100%", height: "100%" }} />
+      </AbsoluteFill>
+      <AbsoluteFill style={{ background: `radial-gradient(circle at ${85 + 10 * Math.sin(f * 0.02)}% 15%, rgba(190,120,255,${0.12 + 0.06 * Math.sin(f * 0.05)}), transparent 45%)`, mixBlendMode: "screen" }} />
+    </>
+  );
 };
 
 const S: React.FC<{ name: string; r: { from: number; to: number }; children: React.ReactNode }> = ({ name, r, children }) => (
@@ -40,9 +64,12 @@ const SFX: [string, number, number][] = [
   ["rm-whoosh", PICS.tired2.from - 3, 0.3],
   ["rm-whoosh", PICS.energy2.from - 3, 0.35],
   ["bass", M.fail.from + 9, 0.5],
-  ["pop", M.why.from + 10, 0.4],
-  ["tick", M.steps.from + 14, 0.5],
-  ["tick", M.steps.from + 34, 0.5],
+  ["rm-whoosh", M.why.from - 2, 0.4],
+  ["bass", M.why.from + 4, 0.45],
+  ["rm-whoosh", M.first.from - 2, 0.4],
+  ["bass", M.first.from + 4, 0.4],
+  ["pop", M.steps.from + 2, 0.4],
+  ["pop", M.steps.from + 18, 0.4],
   ["rm-whip", M.goal.from + 12, 0.4],
   ["ding", M.goal.from + 24, 0.35],
   ["pop", M.order.from + 11, 0.35],
@@ -72,11 +99,13 @@ export const Aynura: React.FC = () => (
     <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 40%, transparent 50%, rgba(0,0,0,0.36) 100%)" }} />
     <AbsoluteFill style={{ background: "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.3) 72%, rgba(0,0,0,0.15) 100%)" }} />
 
-    <PopCaptions phrases={PHRASES} top={LOW + 10} hide={HIDE} />
+    <Grain />
+    <RefCaptions phrases={PHRASES} top={LOW} hide={HIDE} />
 
     <S name="Ishlamaydi" r={M.fail}><Fail dur={d(M.fail)} /></S>
-    <S name="Nimaga?" r={M.why}><Why dur={d(M.why)} /></S>
-    <S name="Energiya + ong osti" r={M.steps}><Steps dur={d(M.steps)} /></S>
+    <S name="Karta: NIMAGA?" r={M.why}><Card dur={d(M.why)} small="Bilasizlarmi," big="Nimaga?" /></S>
+    <S name="Karta: Birinchi navbatda" r={M.first}><Card dur={d(M.first)} small="1-qadam" big="Birinchi navbatda" /></S>
+    <S name="Chiplar: energiya / ong osti" r={M.steps}><Chips dur={d(M.steps)} items={["Energiya", "Ong osti"]} gap={16} /></S>
     <S name="Maqsad" r={M.goal}><Goal dur={d(M.goal)} /></S>
     <S name="Energiya → texnika" r={M.order}><Order dur={d(M.order)} /></S>
     <S name="Obuna + Telegram" r={M.telegram}><Subscribe dur={d(M.telegram)} clickAt={30} telegram /></S>

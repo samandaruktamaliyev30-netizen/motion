@@ -315,3 +315,56 @@ export const Subscribe: React.FC<{ dur: number; clickAt: number; telegram?: bool
     </div>
   );
 };
+
+/* ================= REFERENCE-STYLE PIECES ================= */
+
+const MONT_IMPORT = "Montserrat"; // loaded by ../reel/ui via RefCaptions
+
+// Full-screen typographic card (like the "INSTAGRAM" cards in the reference).
+export const Card: React.FC<{ dur: number; big: string; small?: string; note?: string }> = ({ dur, big, small, note }) => {
+  const f = useCurrentFrame();
+  const inn = interpolate(f, [0, 6], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
+  const out = interpolate(f, [dur - 5, dur], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
+  const k = interpolate(f, [3, 12], [0, 1], { ...clamp, easing: EASE });
+  const n = interpolate(f, [10, 18], [0, 1], { ...clamp, easing: EASE });
+  const streak = interpolate(f, [0, dur], [-30, 130]);
+  return (
+    <AbsoluteFill style={{ opacity: Math.min(inn * 1.5, 1 - out), transform: `scale(${1.08 - 0.08 * inn + out * 0.1})`, filter: `blur(${(1 - inn) * 12 + out * 12}px)` }}>
+      <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 45%, #3a1650 0%, #1a0a26 50%, #07030b 100%)" }} />
+      <AbsoluteFill style={{ background: `linear-gradient(115deg, transparent ${streak - 15}%, rgba(255,255,255,0.07) ${streak}%, transparent ${streak + 15}%)` }} />
+      <AbsoluteFill style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18 }}>
+        {small ? <div style={{ fontFamily: MONT_IMPORT, fontWeight: 500, fontSize: 46, letterSpacing: 6, color: "rgba(255,255,255,0.75)", textTransform: "uppercase", opacity: k, filter: `blur(${(1 - k) * 6}px)` }}>{N(small)}</div> : null}
+        <div style={{ fontFamily: MONT_IMPORT, fontWeight: 900, fontSize: 150, lineHeight: 0.95, color: "white", textAlign: "center", textTransform: "uppercase", letterSpacing: interpolate(k, [0, 1], [30, -3]), opacity: k, filter: `blur(${(1 - k) * 16}px)`, textShadow: "0 10px 40px rgba(0,0,0,0.6)", padding: "0 40px" }}>{N(big)}</div>
+        {note ? (
+          <div style={{ marginTop: 30, padding: "14px 30px", borderRadius: 18, border: "1.5px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.06)", fontFamily: MONT_IMPORT, fontStyle: "italic", fontWeight: 600, fontSize: 40, color: "rgba(255,255,255,0.9)", opacity: n, transform: `translateY(${(1 - n) * 20}px)` }}>{N(note)}</div>
+        ) : null}
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
+
+// Glass keyword chips with a sparkle (like "ISHONCHLI ✦ / O‘Z VAQTIDA ✦").
+const Sparkle: React.FC<{ size: number; color: string; f: number }> = ({ size, color, f }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" style={{ transform: `rotate(${f * 3}deg) scale(${0.9 + 0.1 * Math.sin(f * 0.4)})`, filter: `drop-shadow(0 0 8px ${color})` }}>
+    <path d="M12 0 C13 8 16 11 24 12 C16 13 13 16 12 24 C11 16 8 13 0 12 C8 11 11 8 12 0z" fill={color} />
+  </svg>
+);
+
+export const Chips: React.FC<{ dur: number; items: string[]; gap?: number }> = ({ dur, items, gap = 14 }) => {
+  const f = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const p = useIO(dur, 6, 6);
+  return (
+    <div style={{ position: "absolute", top: LOW - 10, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 22, opacity: p }}>
+      {items.map((it, i) => {
+        const s = spring({ frame: f - i * gap, fps, config: { damping: 12, stiffness: 180 } });
+        return (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 30px", borderRadius: 18, background: "linear-gradient(180deg, rgba(255,255,255,0.32), rgba(255,255,255,0.12))", border: "2px solid rgba(255,255,255,0.55)", backdropFilter: "blur(14px)", boxShadow: "0 12px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.6)", transform: `translateX(${(1 - s) * (i % 2 ? 160 : -160)}px) scale(${0.8 + 0.2 * s})`, opacity: Math.min(1, s * 1.6) }}>
+            <span style={{ fontFamily: MONT_IMPORT, fontWeight: 900, fontSize: 62, color: "white", letterSpacing: 0.5, textTransform: "uppercase", textShadow: "0 2px 6px rgba(0,0,0,0.35)" }}>{N(it)}</span>
+            <Sparkle size={44} color={GOLD} f={f} />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
