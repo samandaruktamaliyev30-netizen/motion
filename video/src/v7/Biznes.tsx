@@ -38,9 +38,9 @@ const Camera: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     blur = (4 - since) * 1.2;
   }
   // zoom-through into the B-roll block
-  const into = interpolate(f, [BROLL[0].r.from - TR, BROLL[0].r.from], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
+  const into = f >= BROLL[0].r.from ? 0 : interpolate(f, [BROLL[0].r.from - TR, BROLL[0].r.from], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
   // arrival after the B-roll block
-  const back = interpolate(f, [BROLL_END, BROLL_END + 10], [1, 0], { ...clamp, easing: Easing.out(Easing.cubic) });
+  const back = f < BROLL_END ? 0 : interpolate(f, [BROLL_END, BROLL_END + 10], [1, 0], { ...clamp, easing: Easing.out(Easing.cubic) });
   s *= 1 + into * 0.35 + back * 0.3;
   blur += into * 14 + back * 12;
   return (
@@ -161,7 +161,7 @@ export const Biznes: React.FC = () => (
     <Sfx name="rm-ding" f={at(49.45)} v={0.35} />
 
     <Audio name="Voice (tozalangan)" src={VOICE} />
-    <Audio name="Music" src={staticFile("music.wav")} volume={(fr) => (fr < 90 ? 1.1 : 0.85)} loop />
+    <Audio name="Music: Metro Boomin - Superhero (Kimyo papkasidan)" src={staticFile("v7/music.wav")} volume={(fr) => (fr < 1455 ? 1.0 : 0.75)} />
   </AbsoluteFill>
 );
 
