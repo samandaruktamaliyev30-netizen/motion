@@ -21,13 +21,25 @@ import {
 } from "lucide-react";
 import { INTER } from "../v4/ui";
 import WORDS_RAW from "./words.json";
+import WARP from "./warp.json";
 
 // Nano Marketing — services promo with an Uzbek voice-over (uz-UZ-SardorNeural).
 // Calm, stable motion: no camera shake, no grain, no streaks. Music: Pixeln World – Freedom
 // (instrumental) from 38.52 s so its drop hits "Nano Marketing".
 export const FPS = 30;
-export const DURATION = 1155; // 38.5 s
-const s = (sec: number) => Math.round(sec * FPS);
+export const DURATION = 1185; // 39.5 s
+// All times in this file are written on the original TTS timeline; WARP maps them onto the
+// user's own recorded voice-over (anchors = start of each of the 59 words in both takes).
+const W_OLD = (WARP.old as number[]);
+const W_NEW = (WARP.new as number[]);
+const warp = (t: number) => {
+  if (t <= W_OLD[0]) return Math.max(0, t - W_OLD[0] + W_NEW[0]);
+  for (let i = 1; i < W_OLD.length; i++) {
+    if (t <= W_OLD[i]) return W_NEW[i - 1] + ((t - W_OLD[i - 1]) / (W_OLD[i] - W_OLD[i - 1])) * (W_NEW[i] - W_NEW[i - 1]);
+  }
+  return t - W_OLD[W_OLD.length - 1] + W_NEW[W_NEW.length - 1];
+};
+const s = (sec: number) => Math.min(DURATION, Math.round(warp(sec) * FPS));
 const HANDLE = "@nano_marketinguz";
 
 type RawWord = [string, number, number];
@@ -63,7 +75,7 @@ const SC = {
   perf: [19.8, 24.95],
   strat: [24.95, 29.65],
   team: [29.65, 33.95],
-  cta: [33.95, 38.5],
+  cta: [33.95, 99],
 } as const;
 
 /* ---------------- shared pieces ---------------- */
@@ -485,7 +497,7 @@ const Cta: React.FC = () => {
   const btn = useSp(6, 13, 150);
   const h = useSp(20);
   const shine = ((f - 24) % 50) / 50;
-  const fade = p(f, 125, 136);
+  const fade = p(f, DURATION - s(SC.cta[0]) - 12, DURATION - s(SC.cta[0]) - 1);
   return (
     <AbsoluteFill style={{ alignItems: "center" }}>
       <div style={{ position: "absolute", top: 420, display: "flex", alignItems: "center", gap: 26, opacity: logo, transform: `translateY(${(1 - logo) * 30}px)` }}>
@@ -558,8 +570,8 @@ export const Nano3: React.FC = () => {
         );
       })}
       <Watermark />
-      <Audio name="Voice-over (uz-UZ-SardorNeural)" src={staticFile("nano/vo3.wav")} />
-      <Audio name="Music: Pixeln World – Freedom (from 38.52 s)" src={staticFile("nano/music3.wav")} />
+      <Audio name="Voice-over (own recording)" src={staticFile("nano/vo4.wav")} />
+      <Audio name="Music: Pixeln World – Freedom (from 39.40 s)" src={staticFile("nano/music4.wav")} />
     </AbsoluteFill>
   );
 };
