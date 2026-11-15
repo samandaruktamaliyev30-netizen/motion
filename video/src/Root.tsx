@@ -8,6 +8,7 @@ import { DURATION as V4_DURATION } from "./v4/timeline";
 import { Ov } from "./ov/Ov";
 import { DURATION as OV_DURATION } from "./ov/timeline";
 import { Nano, DURATION as NANO_DURATION } from "./nano/Nano";
+import { Nano2, DURATION as NANO2_DURATION } from "./nano2/Nano2";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -48,6 +49,14 @@ export const RemotionRoot: React.FC = () => {
         id="NanoMarketing"
         component={Nano}
         durationInFrames={NANO_DURATION}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="NanoMarketing2"
+        component={Nano2}
+        durationInFrames={NANO2_DURATION}
         fps={30}
         width={1080}
         height={1920}
