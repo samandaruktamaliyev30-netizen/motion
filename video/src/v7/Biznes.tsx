@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, interpolate, Easing, Sequence, staticFile, useCurrentFrame } from "remotion";
 import { Audio, Video } from "@remotion/media";
-import { at, BROLL, BROLL_END, DURATION, FACE, LOW, M, SHOTS, TITLE, type Trans } from "./timeline";
+import { at, BROLL, BROLL_END, CLIPS, DURATION, FACE, LOW, M, MUSIC_TRIM, SHOTS, TITLE, type Trans } from "./timeline";
 import { PHRASES } from "./captions";
 import { StyleCaptions } from "../shared/StyleCaptions";
 import { Cta, Escalate, Guide, Many, Org, Title } from "./Motion";
@@ -71,8 +71,9 @@ const BRollClip: React.FC<{ src: string; trim: number; dur: number; t: Trans; la
     tf = `rotate(${k * 18}deg) scale(${1 + k * 0.5})`;
     blur = k * 14;
   }
-  // last clip leaves by zooming through to the speaker
-  const out = last ? interpolate(f, [dur - TR, dur], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) }) : 0;
+  // Each clip stays TR frames past its end, under the next clip's entry (no speaker peeking through).
+  // The last one leaves AFTER the block ends (phone already gone), zooming through to the speaker.
+  const out = last ? interpolate(f, [dur, dur + TR], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) }) : 0;
   const filterUrl = sx || sy ? ` url(#${id})` : "";
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
@@ -117,11 +118,15 @@ const CUTS = [...BROLL.map((b) => b.r.from), BROLL_END];
 export const Biznes: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: "black" }}>
     <Camera>
-      <Video name="Spiker (yaqinlashtirilgan, yuz tozalangan)" src={RAW} muted />
+      {CLIPS.map((c, i) => (
+        <Sequence key={i} name={`Spiker ${i + 1}`} from={c.out} durationInFrames={c.srcEnd - c.srcStart}>
+          <Video src={RAW} muted trimBefore={c.srcStart} />
+        </Sequence>
+      ))}
     </Camera>
 
     {BROLL.map((b, i) => (
-      <S key={b.name} name={b.name} r={b.r}>
+      <S key={b.name} name={b.name} r={{ from: b.r.from, to: b.r.to + TR }}>
         <BRollClip src={b.src} trim={b.trim} dur={d(b.r)} t={b.t} last={i === BROLL.length - 1} id={`db${i}`} />
       </S>
     ))}
@@ -140,7 +145,6 @@ export const Biznes: React.FC = () => (
     <S name="CTA: 3 deb yozing" r={M.cta}><Cta dur={d(M.cta)} sendAt={at(48.1) - M.cta.from} freeAt={at(49.45) - M.cta.from} /></S>
 
     {/* sound design */}
-    <Sfx name="riser" f={0} v={0.35} />
     <Sfx name="bass" f={4} v={0.45} />
     <Sfx name="rm-whoosh" f={TITLE.to - 10} v={0.6} />
     <Sfx name="pop" f={M.org.from + 2} v={0.45} />
@@ -160,8 +164,17 @@ export const Biznes: React.FC = () => (
     <Sfx name="rm-mouse-click" f={at(48.1) - 1} v={0.5} />
     <Sfx name="rm-ding" f={at(49.45)} v={0.35} />
 
-    <Audio name="Voice (tozalangan)" src={VOICE} />
-    <Audio name="Music: Metro Boomin - Superhero (Kimyo papkasidan)" src={staticFile("v7/music.wav")} volume={(fr) => (fr < 1455 ? 1.0 : 0.75)} />
+    {CLIPS.map((c, i) => (
+      <Sequence key={i} name={`Ovoz ${i + 1}`} from={c.out} durationInFrames={c.srcEnd - c.srcStart}>
+        <Audio src={VOICE} trimBefore={c.srcStart} />
+      </Sequence>
+    ))}
+    <Audio
+      name="Music: Metro Boomin - Superhero (Kimyo papkasidan)"
+      src={staticFile("v7/music.wav")}
+      trimBefore={MUSIC_TRIM}
+      volume={(fr) => Math.min(1, fr / 8) * (fr < at(48.1) ? 1.0 : 0.72)}
+    />
   </AbsoluteFill>
 );
 
