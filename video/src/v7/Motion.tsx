@@ -72,7 +72,7 @@ export const Title: React.FC<{ dur: number }> = ({ dur }) => {
   return (
     <>
       <div style={{ position: "absolute", left: 0, right: 0, top: LOW - 120, bottom: 0, background: "linear-gradient(180deg, transparent, rgba(5,8,14,0.4) 30%, rgba(5,8,14,0.55))", opacity: back }} />
-      <div style={{ position: "absolute", top: LOW + 10, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
+      <div style={{ position: "absolute", top: LOW - 45, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
         <div
           style={{
             position: "relative",

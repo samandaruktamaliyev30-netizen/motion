@@ -37,7 +37,7 @@ export const at = (sec: number): number => {
 
 // Speaker in the frame: face centre (540, 795), chin ≈ 1005.
 export const FACE = { cx: 540, cy: 795 };
-export const LOW = 1085; // subtitles & motion live here, below the chin
+export const LOW = 1170; // subtitles & motion: chest area marked by the user (≈1110–1350), below the chin
 
 const r = (a: number, b: number) => ({ from: at(a), to: at(b) });
 
