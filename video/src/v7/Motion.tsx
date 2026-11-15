@@ -283,8 +283,67 @@ export const Order: React.FC<{ dur: number }> = ({ dur }) => {
   );
 };
 
+/* The real Telegram channel header (user's screenshot): a paper plane flies in on a dashed
+   trail, the header unfolds in 3D with a blue glow, a light sweep runs over it and the
+   avatar pulses like a "live" story ring. */
+const TgChannel: React.FC<{ f: number }> = ({ f }) => {
+  const { fps } = useVideoConfig();
+  if (f < -16) return null;
+  const W = 960;
+  const H = (W * 212) / 1280;
+  const fly = interpolate(f, [-16, 0], [0, 1], { ...clamp, easing: Easing.inOut(Easing.cubic) });
+  const open = spring({ frame: f, fps, config: { damping: 13, stiffness: 120 } });
+  const sweep = interpolate(f, [8, 34], [-20, 120], clamp);
+  const ring = (f % 30) / 30;
+  // plane path: from bottom-left, arcing up into the card's centre
+  const px = interpolate(fly, [0, 1], [-420, 0]);
+  const py = interpolate(fly, [0, 1], [260, 0]) - Math.sin(fly * Math.PI) * 140;
+  const avX = (1168 / 1280) * W;
+  const avY = (128 / 212) * H;
+  return (
+    <div style={{ position: "relative", width: W, height: H, perspective: 1400 }}>
+      {/* dashed trail */}
+      {fly < 1 || f < 10 ? (
+        <svg width={W} height={600} viewBox={`0 0 ${W} 600`} style={{ position: "absolute", left: 0, top: -220, overflow: "visible", opacity: interpolate(f, [0, 10], [1, 0], clamp) }}>
+          <path d={`M ${W / 2 - 420} ${220 + H / 2 + 260} Q ${W / 2 - 230} ${220 + H / 2 - 60} ${W / 2} ${220 + H / 2}`} fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth={4} strokeDasharray="10 14" strokeDashoffset={-f * 3} pathLength={1000} style={{ strokeDasharray: "18 22" }} />
+        </svg>
+      ) : null}
+      {/* glow */}
+      <div style={{ position: "absolute", inset: -30, borderRadius: 80, background: TG, filter: "blur(40px)", opacity: open * (0.45 + 0.1 * Math.sin(f * 0.2)) }} />
+      {/* the header, unfolding */}
+      <div style={{ position: "absolute", inset: 0, borderRadius: 40, overflow: "hidden", transformOrigin: "50% 0%", transform: `rotateX(${(1 - open) * -85}deg) scale(${0.9 + 0.1 * open}) translateY(${Math.sin(f * 0.1) * 4}px)`, opacity: Math.min(1, open * 1.6), border: "2px solid rgba(255,255,255,0.25)", boxShadow: "0 24px 60px rgba(0,0,0,0.55)" }}>
+        <Img src={staticFile("v7/tg_channel.jpg")} style={{ width: W, height: H, display: "block" }} />
+        <div style={{ position: "absolute", inset: 0, background: `linear-gradient(110deg, transparent ${sweep - 14}%, rgba(255,255,255,0.28) ${sweep}%, transparent ${sweep + 14}%)` }} />
+      </div>
+      {/* avatar story ring */}
+      {open > 0.6 ? (
+        <>
+          <div style={{ position: "absolute", left: avX - 52, top: avY - 52, width: 104, height: 104, borderRadius: 52, border: `5px solid ${TG}`, boxShadow: `0 0 18px ${TG}` }} />
+          <div style={{ position: "absolute", left: avX - 52, top: avY - 52, width: 104, height: 104, borderRadius: 52, border: "3px solid white", opacity: 1 - ring, transform: `scale(${1 + ring * 0.6})` }} />
+        </>
+      ) : null}
+      {/* Telegram badge on the corner */}
+      <div style={{ position: "absolute", left: -18, top: -30, width: 84, height: 84, borderRadius: 42, background: TG, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 10px 26px rgba(42,171,238,0.6)", transform: `scale(${spring({ frame: f - 8, fps, config: { damping: 9, stiffness: 200 } })}) rotate(${Math.sin(f * 0.15) * 8}deg)` }}>
+        <IconSend size={46} color="white" stroke={2.6} />
+      </div>
+      {/* flying plane */}
+      {fly < 1 ? (
+        <div style={{ position: "absolute", left: W / 2 - 40 + px, top: H / 2 - 40 + py, width: 80, height: 80, borderRadius: 40, background: TG, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 0 30px ${TG}`, transform: `rotate(${interpolate(fly, [0, 1], [-30, 20])}deg)` }}>
+          <IconSend size={44} color="white" stroke={2.6} />
+        </div>
+      ) : null}
+      {/* tap hint under the card */}
+      <div style={{ position: "absolute", top: H + 26, left: 0, right: 0, display: "flex", justifyContent: "center", opacity: interpolate(f, [18, 28], [0, 1], clamp) }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 30px", borderRadius: 999, background: TG, fontFamily: INTER, fontWeight: 800, fontSize: 40, color: "white", boxShadow: "0 12px 30px rgba(42,171,238,0.45)", transform: `scale(${1 + 0.04 * Math.sin(f * 0.35)})` }}>
+          {N("Kanalga o‘tish")} →
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* Subscribe button with cursor click (+ optional Telegram pill) */
-export const Subscribe: React.FC<{ dur: number; clickAt: number; telegram?: boolean }> = ({ dur, clickAt, telegram }) => {
+export const Subscribe: React.FC<{ dur: number; clickAt: number; telegram?: boolean; tgAt?: number }> = ({ dur, clickAt, telegram, tgAt }) => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   const inn = useIO(dur, 10, telegram ? 7 : 1);
@@ -292,7 +351,6 @@ export const Subscribe: React.FC<{ dur: number; clickAt: number; telegram?: bool
   const press = interpolate(f, [clickAt - 2, clickAt + 1, clickAt + 7], [1, 0.9, 1], clamp);
   const cur = interpolate(f, [12, clickAt - 2], [240, 0], { ...clamp, easing: Easing.out(Easing.cubic) });
   const ripple = interpolate(f, [clickAt, clickAt + 14], [0, 1], clamp);
-  const tg = spring({ frame: f - clickAt - 12, fps, config: { damping: 12 } });
   const btn = spring({ frame: f, fps, config: { damping: 12, stiffness: 150 } });
   return (
     <div style={{ position: "absolute", top: LOW, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 28, opacity: inn, transform: `translateY(${(1 - inn) * 30}px)` }}>
@@ -306,12 +364,7 @@ export const Subscribe: React.FC<{ dur: number; clickAt: number; telegram?: bool
           <path d="M4 2l16 9-7 1.5L9.5 20z" fill="white" stroke="#111" strokeWidth={1.4} strokeLinejoin="round" />
         </svg>
       </div>
-      {telegram ? (
-        <div style={{ borderRadius: 999, padding: "18px 40px", background: TG, display: "flex", alignItems: "center", gap: 16, transform: `scale(${tg})`, opacity: Math.min(1, tg * 1.5), boxShadow: "0 14px 36px rgba(42,171,238,0.45)" }}>
-          <IconSend size={46} color="white" stroke={2.4} />
-          <span style={{ fontFamily: INTER, fontWeight: 800, fontSize: 46, color: "white" }}>Telegram kanal</span>
-        </div>
-      ) : null}
+      {telegram ? <TgChannel f={f - (tgAt ?? clickAt + 12)} /> : null}
     </div>
   );
 };

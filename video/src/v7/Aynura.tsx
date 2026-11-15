@@ -73,8 +73,10 @@ const SFX: [string, number, number][] = [
   ["rm-whip", M.goal.from + 12, 0.4],
   ["ding", M.goal.from + 24, 0.35],
   ["pop", M.order.from + 11, 0.35],
-  ["rm-mouse-click", M.telegram.from + 30, 0.7],
-  ["pop", M.telegram.from + 42, 0.35],
+  ["rm-mouse-click", M.telegram.from + 24, 0.7],
+  ["rm-whoosh", at(55.4) - 16, 0.4],
+  ["pop", at(55.4), 0.45],
+  ["ding", at(55.4) + 10, 0.3],
   ["rm-mouse-click", M.subscribe.from + 26, 0.7],
 ];
 
@@ -108,16 +110,16 @@ export const Aynura: React.FC = () => (
     <S name="Chiplar: energiya / ong osti" r={M.steps}><Chips dur={d(M.steps)} items={["Energiya", "Ong osti"]} gap={16} /></S>
     <S name="Maqsad" r={M.goal}><Goal dur={d(M.goal)} /></S>
     <S name="Energiya → texnika" r={M.order}><Order dur={d(M.order)} /></S>
-    <S name="Obuna + Telegram" r={M.telegram}><Subscribe dur={d(M.telegram)} clickAt={30} telegram /></S>
+    <S name="Obuna + Telegram" r={M.telegram}><Subscribe dur={d(M.telegram)} clickAt={24} telegram tgAt={at(55.4) - M.telegram.from} /></S>
     <S name="Obuna bo‘lish (oxiri)" r={M.subscribe}><Subscribe dur={d(M.subscribe) + 1} clickAt={26} /></S>
 
     {CLIPS.map((c, i) => (
       <Audio key={i} name={`Voice ${i + 1}`} src={VOICE} trimBefore={c.srcStart} from={c.out} durationInFrames={c.srcEnd - c.srcStart} />
     ))}
     <Audio
-      name="Music: Freedom (instrumental)"
+      name="Music: Viliam Lane — particles"
       src={staticFile("v7/music.wav")}
-      volume={(f) => interpolate(f, [0, 10, DURATION - 30, DURATION], [0, 0.16, 0.16, 0], clamp)}
+      volume={(f) => interpolate(f, [0, 10, DURATION - 30, DURATION], [0, 0.1, 0.1, 0], clamp)}
     />
     {SFX.map(([n, from, v], i) => (
       <Sequence key={i} name={`SFX ${n}`} from={Math.max(0, from)} durationInFrames={60}>
