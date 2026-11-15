@@ -53,68 +53,52 @@ const Pop: React.FC<{ delay: number; children: React.ReactNode; style?: React.CS
   return <div style={{ transform: `scale(${s}) translateY(${(1 - s) * 30}px)`, opacity: Math.min(1, s * 1.5), ...style }}>{children}</div>;
 };
 
-/* ---------- 1. title in a framed card (reference "OLDIN BOY" style), 0–3.2 s ----------
-   Two lines, centred, fully on screen: [NEGA BIZNES YAXŞI] / [RIVOJLANMAYDI]. */
-const ROYAL = "#2A3BD8";
+/* ---------- 1. title card, 0–3.2 s ----------
+   Reference: "SIZNI BIZNESDA ALDASHGANMI?" (blue gradient box, thin white frame, white heavy
+   two-line text, thin red underline). Centred, straight, fully on screen. */
 export const Title: React.FC<{ dur: number }> = ({ dur }) => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   const outAt = dur - 9; // leaves at ≈ 2.9 s, gone by 3.2 s
-  const card = spring({ frame: f, fps, config: { damping: 14, stiffness: 170 } });
-  const open = interpolate(f, [0, 9], [0, 1], { ...clamp, easing: EASE });
+  const card = spring({ frame: f, fps, config: { damping: 15, stiffness: 180 } });
+  const open = interpolate(f, [0, 8], [0, 1], { ...clamp, easing: EASE });
   const o = interpolate(f, [outAt, outAt + 9], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
-  const shine = interpolate(f, [18, 40], [-40, 140], clamp);
-  const hl = interpolate(f, [12, 22], [0, 1], { ...clamp, easing: EASE });
-  const badge = spring({ frame: f - 20, fps, config: { damping: 9, stiffness: 220 } });
+  const shine = interpolate(f, [16, 38], [-40, 140], clamp);
+  const line = interpolate(f, [14, 26], [0, 1], { ...clamp, easing: EASE });
+  const w1 = interpolate(f, [4, 14], [0, 1], { ...clamp, easing: EASE });
+  const w2 = interpolate(f, [8, 18], [0, 1], { ...clamp, easing: EASE });
   const back = Math.min(interpolate(f, [0, 8], [0, 1], clamp), interpolate(f, [outAt + 2, dur], [1, 0], clamp));
-  const w1 = interpolate(f, [5, 16], [0, 1], { ...clamp, easing: EASE });
-  const w2 = interpolate(f, [10, 21], [0, 1], { ...clamp, easing: EASE });
-  const word: React.CSSProperties = { fontFamily: INTER, fontWeight: 900, letterSpacing: -1.5, lineHeight: 1.0, color: "white", textShadow: "0 3px 0 rgba(0,0,0,0.18)" };
+  const word: React.CSSProperties = { fontFamily: INTER, fontWeight: 800, fontSize: 76, letterSpacing: -1, lineHeight: 1.04, color: "white", textShadow: "0 2px 6px rgba(0,0,0,0.25)", whiteSpace: "nowrap" };
   return (
     <>
-      <div style={{ position: "absolute", left: 0, right: 0, top: LOW - 120, bottom: 0, background: "linear-gradient(180deg, transparent, rgba(5,8,14,0.45) 30%, rgba(5,8,14,0.6))", opacity: back }} />
+      <div style={{ position: "absolute", left: 0, right: 0, top: LOW - 120, bottom: 0, background: "linear-gradient(180deg, transparent, rgba(5,8,14,0.4) 30%, rgba(5,8,14,0.55))", opacity: back }} />
       <div style={{ position: "absolute", top: LOW + 10, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
         <div
           style={{
             position: "relative",
-            transform: `rotate(-2deg) scale(${(0.75 + card * 0.25) * (1 - o * 0.25)})`,
+            background: "linear-gradient(180deg, #3D6BF0 0%, #2448C8 55%, #1A36A6 100%)",
+            border: "3px solid rgba(255,255,255,0.95)",
+            borderRadius: 18,
+            padding: "20px 44px 30px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            overflow: "hidden",
+            boxShadow: "0 18px 40px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.25)",
+            transform: `scale(${(0.8 + card * 0.2) * (1 - o * 0.2)})`,
             filter: `blur(${o * 14}px)`,
             opacity: 1 - o,
+            clipPath: `inset(0 ${(1 - open) * 50}% 0 ${(1 - open) * 50}% round 18px)`,
           }}
         >
-          <div
-            style={{
-              position: "relative",
-              maxWidth: 960,
-              background: `linear-gradient(160deg, #3649EA, ${ROYAL} 55%, #1E2BA8)`,
-              border: "6px solid white",
-              borderRadius: 20,
-              padding: "22px 40px 26px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 8,
-              overflow: "hidden",
-              boxShadow: "0 24px 60px rgba(0,0,0,0.55)",
-              clipPath: `inset(0 ${(1 - open) * 50}% 0 ${(1 - open) * 50}% round 20px)`,
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 16, overflow: "hidden", paddingBottom: 4 }}>
-              <span style={{ ...word, fontSize: 68, transform: `translateY(${(1 - w1) * 110}%)`, opacity: w1 }}>NEGA BIZNES</span>
-              <span style={{ position: "relative", padding: "4px 16px 8px", transform: `translateY(${(1 - w1) * 110}%)`, opacity: w1 }}>
-                <span style={{ position: "absolute", inset: 0, background: GOLD, borderRadius: 12, transformOrigin: "left center", transform: `scaleX(${hl})` }} />
-                <span style={{ ...word, position: "relative", fontSize: 68, color: INK, textShadow: "none" }}>{N("YAXSHI")}</span>
-              </span>
-            </div>
-            <div style={{ overflow: "hidden", paddingBottom: 4 }}>
-              <div style={{ ...word, fontSize: 98, transform: `translateY(${(1 - w2) * 110}%)`, opacity: w2 }}>RIVOJLANMAYDI</div>
-            </div>
-            <div style={{ position: "absolute", top: 0, bottom: 0, left: `${shine}%`, width: "22%", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)", transform: "skewX(-20deg)" }} />
+          <div style={{ overflow: "hidden" }}>
+            <div style={{ ...word, transform: `translateY(${(1 - w1) * 110}%)`, opacity: w1 }}>{N("NEGA BIZNES YAXSHI")}</div>
           </div>
-          {/* question badge, inside the screen */}
-          <div style={{ position: "absolute", top: -28, right: -18, width: 70, height: 70, borderRadius: 35, background: RED, border: "5px solid white", display: "flex", alignItems: "center", justifyContent: "center", transform: `scale(${f >= 20 ? badge : 0}) rotate(${(1 - badge) * -40 + 10}deg)`, boxShadow: "0 10px 24px rgba(0,0,0,0.45)" }}>
-            <span style={{ fontFamily: INTER, fontWeight: 900, fontSize: 44, color: "white", marginTop: -4 }}>?</span>
+          <div style={{ overflow: "hidden" }}>
+            <div style={{ ...word, transform: `translateY(${(1 - w2) * 110}%)`, opacity: w2 }}>RIVOJLANMAYDI</div>
           </div>
+          <div style={{ position: "absolute", left: 44, right: 44, bottom: 14, height: 4, borderRadius: 2, background: RED, transformOrigin: "left center", transform: `scaleX(${line})` }} />
+          <div style={{ position: "absolute", top: 0, bottom: 0, left: `${shine}%`, width: "20%", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)", transform: "skewX(-20deg)" }} />
         </div>
       </div>
     </>
