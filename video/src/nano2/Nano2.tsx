@@ -11,7 +11,7 @@ import { INTER } from "../v4/ui";
 export const FPS = 30;
 export const DURATION = 630; // 21 s
 const s = (sec: number) => Math.round(sec * FPS);
-const HANDLE = "@samandar_uktamal1yev";
+const HANDLE = "@nano_marketinguz";
 const DROP = s(10.36);
 const BEAT = 0.628;
 const beat = (f: number) => {

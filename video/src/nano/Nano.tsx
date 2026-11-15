@@ -8,7 +8,7 @@ import { INTER } from "../v4/ui";
 export const FPS = 30;
 export const DURATION = 552; // 18.4 s
 const s = (sec: number) => Math.round(sec * FPS);
-const HANDLE = "@samandar_uktamal1yev";
+const HANDLE = "@nano_marketinguz";
 
 const C = {
   ink: "#06070B",

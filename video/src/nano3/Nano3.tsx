@@ -28,7 +28,7 @@ import WORDS_RAW from "./words.json";
 export const FPS = 30;
 export const DURATION = 1155; // 38.5 s
 const s = (sec: number) => Math.round(sec * FPS);
-const HANDLE = "@samandar_uktamal1yev";
+const HANDLE = "@nano_marketinguz";
 
 type RawWord = [string, number, number];
 const WORDS = (WORDS_RAW as RawWord[]).map(([w, a]) => ({ w: w.replace("Es-em-em", "SMM").replace("Direktga", "Direct’ga").replace(/'/g, "‘"), t: a }));
@@ -526,6 +526,21 @@ const Wrap: React.FC<{ dur: number; first: boolean; last: boolean; children: Rea
   return <AbsoluteFill style={{ opacity: Math.min(inn, 1 - out), transform: `translateY(${(1 - inn) * 40 - out * 40}px)` }}>{children}</AbsoluteFill>;
 };
 
+// Anti-reupload handle: small and low for the whole video, hidden on the end card (which shows it large).
+const Watermark: React.FC = () => {
+  const f = useCurrentFrame();
+  const o = 1 - p(f, s(SC.cta[0]) - 6, s(SC.cta[0]) + 4);
+  if (o <= 0) return null;
+  return (
+    <AbsoluteFill style={{ alignItems: "center", pointerEvents: "none" }}>
+      <div style={{ position: "absolute", top: 1660, display: "flex", alignItems: "center", gap: 12, padding: "10px 24px 10px 16px", borderRadius: 999, background: "rgba(0,0,0,0.35)", border: "1.5px solid rgba(255,255,255,0.16)", opacity: o * 0.9 }}>
+        <Instagram size={32} color="#fff" />
+        <span style={{ fontFamily: INTER, fontWeight: 600, fontSize: 30, color: "rgba(255,255,255,0.9)" }}>{HANDLE}</span>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
 export const Nano3: React.FC = () => {
   const keys = Object.keys(SC) as (keyof typeof SC)[];
   return (
@@ -542,6 +557,7 @@ export const Nano3: React.FC = () => {
           </Sequence>
         );
       })}
+      <Watermark />
       <Audio name="Voice-over (uz-UZ-SardorNeural)" src={staticFile("nano/vo3.wav")} />
       <Audio name="Music: Pixeln World – Freedom (from 38.52 s)" src={staticFile("nano/music3.wav")} />
     </AbsoluteFill>
