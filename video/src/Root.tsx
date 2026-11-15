@@ -8,6 +8,7 @@ import { Kiut2, KIUT2_DURATION } from "./kiut2/Kiut2";
 import { Reel2, REEL2_DURATION } from "./reel2/Reel2";
 import { Sertifikat3, DURATION as S3_DURATION } from "./v5/Sertifikat3";
 import { Choy, CHOY_DURATION } from "./v6/Choy";
+import { Biznes, BIZNES_DURATION } from "./v7/Biznes";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="KIUT" component={Kiut2} durationInFrames={KIUT2_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="MilliySertifikat2" component={Reel2} durationInFrames={REEL2_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="SertifikatFikr" component={Sertifikat3} durationInFrames={S3_DURATION} fps={30} width={1080} height={1920} />
+      <Composition id="BiznesRivojlanmaydi" component={Biznes} durationInFrames={BIZNES_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="ChoyNegaSekin" component={Choy} durationInFrames={CHOY_DURATION} fps={30} width={1080} height={1920} />
     </>
   );
