@@ -47,29 +47,29 @@ export const SHOTS: [number, number, number, number][] = (
 
 // [frame, file, volume]
 export const SFX: [number, string, number][] = [
-  [0, "bass.wav", 0.8],
-  [0, "rm-whoosh.wav", 0.5],
-  [at(1.4), "pop.wav", 0.5],
-  [at(2.78), "rm-whip.wav", 0.45],
-  [at(4.4), "pop.wav", 0.5],
-  [at(5.4), "rm-whoosh.wav", 0.55],
-  [at(7.75), "rm-whip.wav", 0.35],
-  [at(10.3), "rm-whip.wav", 0.35],
-  [at(13.0), "rm-whoosh.wav", 0.45],
-  [at(14.5), "rm-page-turn.wav", 0.5],
-  [at(15.4), "ding.wav", 0.35],
-  [at(16.9), "ding.wav", 0.35],
-  [at(18.35), "rm-whoosh.wav", 0.5],
-  [at(19.6), "riser.wav", 0.3],
-  [at(20.6), "rm-ding.wav", 0.45],
-  [at(23.85), "rm-whoosh.wav", 0.45],
-  [at(26.2), "pop.wav", 0.5],
-  [at(27.6), "rm-mouse-click.wav", 0.7],
+  [0, "bass.wav", 0.36],
+  [0, "rm-whoosh.wav", 0.23],
+  [at(1.4), "pop.wav", 0.23],
+  [at(2.78), "rm-whip.wav", 0.2],
+  [at(4.4), "pop.wav", 0.23],
+  [at(5.4), "rm-whoosh.wav", 0.25],
+  [at(7.75), "rm-whip.wav", 0.16],
+  [at(10.3), "rm-whip.wav", 0.16],
+  [at(13.0), "rm-whoosh.wav", 0.2],
+  [at(14.5), "rm-page-turn.wav", 0.23],
+  [at(15.4), "ding.wav", 0.16],
+  [at(16.9), "ding.wav", 0.16],
+  [at(18.35), "rm-whoosh.wav", 0.23],
+  [at(19.6), "riser.wav", 0.14],
+  [at(20.6), "rm-ding.wav", 0.2],
+  [at(23.85), "rm-whoosh.wav", 0.2],
+  [at(26.2), "pop.wav", 0.23],
+  [at(27.6), "rm-mouse-click.wav", 0.32],
 ];
 
-// Music bed: louder in the first second (hook), ducked under the voice, fade-out at the end.
+// Music bed (from the reference reel, vocals removed): quiet under the voice, fade-out at the end.
 export const MUSIC_VOL = (f: number): number => {
-  const head = f < 12 ? 0.42 : f < 24 ? 0.42 - ((f - 12) / 12) * 0.2 : 0.22;
+  const head = f < 10 ? 0.32 : f < 20 ? 0.32 - ((f - 10) / 10) * 0.18 : 0.14;
   const tail = f > DURATION - 25 ? Math.max(0, (DURATION - f) / 25) : 1;
   return head * tail;
 };
