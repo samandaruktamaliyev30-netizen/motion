@@ -11,6 +11,7 @@ import { Choy, CHOY_DURATION } from "./v6/Choy";
 import { Kimyo, KIMYO_DURATION } from "./v7/Kimyo";
 import { Interyer, INTERYER_DURATION } from "./v8/Interyer";
 import { Interyer7, INTERYER7_DURATION } from "./v9/Interyer7";
+import { Interyer8, INTERYER8_DURATION } from "./v10/Interyer8";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -39,6 +40,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="Kimyo" component={Kimyo} durationInFrames={KIMYO_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="InteryerDizayn" component={Interyer} durationInFrames={INTERYER_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="InteryerDizayn7" component={Interyer7} durationInFrames={INTERYER7_DURATION} fps={30} width={1080} height={1920} />
+      <Composition id="InteryerDizayn8" component={Interyer8} durationInFrames={INTERYER8_DURATION} fps={30} width={1080} height={1920} />
     </>
   );
 };

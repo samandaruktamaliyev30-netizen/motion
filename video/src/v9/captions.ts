@@ -11,7 +11,7 @@ const SRC: [number, string][] = [
   [7.46, "alohida hisoblanadi."],
   [8.54, "Remont boshlangandan keyin"],
   [10.06, "narx ikki barobar oshadi."],
-  [11.4, "Bizning jamoa —"],
+  [11.4, "Biz — A.D.C jamoasi:"],
   [13.2, "7 yildan beri"],
   [14.18, "400 dan oshiq loyihani topshirganmiz."],
   [16.06, "Har bir bosqichini tushuntirib boramiz."],

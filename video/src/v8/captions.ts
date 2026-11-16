@@ -7,7 +7,7 @@ const SRC: [number, string][] = [
   [0.38, "Remont vaqtida byudjetingiz oshmasligi"],
   [2.78, "hamda sifatli bo‘lishini xohlasangiz,"],
   [4.4, "unda bu video siz uchun."],
-  [5.54, "Biz 7 yildan beri"],
+  [5.54, "Biz, A.D.C jamoasi, 7 yildan beri"],
   [7.8, "dizayn va remont pod klyuch"],
   [9.38, "xizmati bilan shug‘ullanamiz."],
   [10.36, "400 dan oshiq loyihani"],

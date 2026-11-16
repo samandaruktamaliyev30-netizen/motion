@@ -4,10 +4,10 @@ import { Audio, Video } from "@remotion/media";
 import { BROLL, DURATION, FACE, HIT, LOW, M, MUSIC_VOL, SHOTS, SFX } from "./timeline";
 import { PHRASES } from "./captions";
 import { StyleCaptions } from "../shared/StyleCaptions";
-import { Cta, Double, Hook, HookFlash, Smeta, Stats, Steps } from "./Motion";
+import { Cta, Double, Hook, Smeta, Stats, Steps } from "./Motion";
 
 const F = (p: string) => staticFile(`v9/${p}`);
-const GRADE = "contrast(1.07) saturate(1.1) brightness(1.02)";
+const GRADE = "contrast(1.05) saturate(0.97) brightness(1.02)";
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 type R = { from: number; to: number };
 const d = (r: R) => r.to - r.from;
@@ -65,7 +65,6 @@ export const Interyer7: React.FC = () => (
 
     <StyleCaptions phrases={PHRASES} top={LOW} hide={HIDE} />
 
-    <S name="Hook flash" r={{ from: 0, to: 8 }}><HookFlash /></S>
     <S name="Hook: arzon smeta?" r={M.hook}><Hook dur={d(M.hook)} /></S>
     <S name="Narx x2" r={M.double}><Double dur={d(M.double)} /></S>
     <S name="7+ yil / 400+ loyiha" r={M.stats}><Stats dur={d(M.stats)} /></S>
