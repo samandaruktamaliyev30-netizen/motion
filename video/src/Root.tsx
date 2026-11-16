@@ -8,6 +8,7 @@ import { Kiut2, KIUT2_DURATION } from "./kiut2/Kiut2";
 import { Reel2, REEL2_DURATION } from "./reel2/Reel2";
 import { Sertifikat3, DURATION as S3_DURATION } from "./v5/Sertifikat3";
 import { Choy, CHOY_DURATION } from "./v6/Choy";
+import { Kimyo, KIMYO_DURATION } from "./v7/Kimyo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -33,6 +34,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="MilliySertifikat2" component={Reel2} durationInFrames={REEL2_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="SertifikatFikr" component={Sertifikat3} durationInFrames={S3_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="ChoyNegaSekin" component={Choy} durationInFrames={CHOY_DURATION} fps={30} width={1080} height={1920} />
+      <Composition id="Kimyo" component={Kimyo} durationInFrames={KIMYO_DURATION} fps={30} width={1080} height={1920} />
     </>
   );
 };
