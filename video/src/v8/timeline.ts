@@ -21,6 +21,7 @@ export const BROLL = [
 export const M = {
   hook: r(0, 5.46),
   team: r(5.54, 7.8),
+  projects: r(10.36, 13.02),
   contract: r(14.4, 18.4),
   gift: r(19.56, 21.88),
   cta: r(26.2, 29.53),
@@ -55,6 +56,8 @@ export const SFX: [number, string, number][] = [
   [at(5.4), "rm-whoosh.wav", 0.25],
   [at(7.75), "rm-whip.wav", 0.16],
   [at(10.3), "rm-whip.wav", 0.16],
+  [at(10.45), "tick.wav", 0.18],
+  [at(11.5), "ding.wav", 0.18],
   [at(13.0), "rm-whoosh.wav", 0.2],
   [at(14.5), "rm-page-turn.wav", 0.23],
   [at(15.4), "ding.wav", 0.16],

@@ -134,7 +134,7 @@ export const BudgetHook: React.FC<{ dur: number }> = ({ dur }) => {
 /* ---------- "2 yildan beri" badge over the office B-roll ---------- */
 export const Team: React.FC<{ dur: number }> = ({ dur }) => {
   const f = useCurrentFrame();
-  const n = Math.round(interpolate(f, [4, 20], [0, 2], { ...clamp, easing: Easing.out(Easing.cubic) }));
+  const n = Math.round(interpolate(f, [4, 22], [0, 7], { ...clamp, easing: Easing.out(Easing.cubic) }));
   const line = interpolate(f, [8, 26], [0, 1], { ...clamp, easing: EASE });
   return (
     <Low dur={dur}>
@@ -144,6 +144,41 @@ export const Team: React.FC<{ dur: number }> = ({ dur }) => {
           <div style={{ fontFamily: INTER, fontWeight: 800, fontSize: 60, color: "white", lineHeight: 1 }}>{N("yildan beri")}</div>
           <div style={{ height: 3, width: 380 * line, background: GOLD, borderRadius: 2, margin: "14px 0" }} />
           <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 38, color: "rgba(255,255,255,0.85)" }}>{N("dizayn + remont")}</div>
+        </div>
+      </div>
+    </Low>
+  );
+};
+
+/* ---------- "400 dan oshiq loyiha": counter + filling grid of houses ---------- */
+const House: React.FC<{ on: number }> = ({ on }) => (
+  <svg width={46} height={46} viewBox="0 0 24 24" fill={on > 0.5 ? GOLD : "none"} stroke={on > 0.5 ? GOLD : "rgba(255,255,255,0.35)"} strokeWidth={1.6} strokeLinejoin="round" style={{ transform: `scale(${0.8 + 0.2 * on})` }}>
+    <path d="M3.5 11 12 4l8.5 7v9h-5.5v-5.5h-6V20H3.5z" />
+  </svg>
+);
+
+export const Projects: React.FC<{ dur: number }> = ({ dur }) => {
+  const f = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const v = interpolate(f, [3, 34], [0, 400], { ...clamp, easing: Easing.out(Easing.cubic) });
+  const plus = spring({ frame: f - 34, fps, config: { damping: 8, stiffness: 260 } });
+  const sub = interpolate(f, [30, 42], [0, 1], { ...clamp, easing: EASE });
+  const cols = 10;
+  const total = 20;
+  return (
+    <Low dur={dur} top={LOW - 20}>
+      <div style={{ ...glass, borderRadius: 40, padding: "26px 40px 30px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+          <span style={{ fontFamily: INTER, fontWeight: 900, fontSize: 150, lineHeight: 0.95, color: "white", letterSpacing: -6, fontVariantNumeric: "tabular-nums" }}>{Math.round(v)}</span>
+          <span style={{ fontFamily: INTER, fontWeight: 900, fontSize: 130, color: GOLD, display: "inline-block", transform: `scale(${plus})` }}>+</span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, 46px)`, gap: 10, marginTop: 14 }}>
+          {Array.from({ length: total }).map((_, i) => (
+            <House key={i} on={interpolate(v, [(i / total) * 400, ((i + 1) / total) * 400], [0, 1], clamp)} />
+          ))}
+        </div>
+        <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 40, color: "white", marginTop: 18, opacity: sub, transform: `translateY(${(1 - sub) * 14}px)` }}>
+          {N("loyiha muvaffaqiyatli yakunlangan")}
         </div>
       </div>
     </Low>

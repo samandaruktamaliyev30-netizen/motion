@@ -4,7 +4,7 @@ import { Audio, Video } from "@remotion/media";
 import { BROLL, DURATION, FACE, HIT, LOW, M, MUSIC_VOL, SHOTS, SFX } from "./timeline";
 import { PHRASES } from "./captions";
 import { StyleCaptions } from "../shared/StyleCaptions";
-import { BudgetHook, Contract, Cta, Gift360, HookFlash, Team } from "./Motion";
+import { BudgetHook, Contract, Cta, Gift360, HookFlash, Projects, Team } from "./Motion";
 
 const F = (p: string) => staticFile(`v8/${p}`);
 const GRADE = "contrast(1.07) saturate(1.1) brightness(1.02)";
@@ -68,6 +68,7 @@ export const Interyer: React.FC = () => (
     <S name="Hook flash" r={{ from: 0, to: 8 }}><HookFlash /></S>
     <S name="Hook: byudjet" r={M.hook}><BudgetHook dur={d(M.hook)} /></S>
     <S name="Jamoa / dizayn + remont" r={M.team}><Team dur={d(M.team)} /></S>
+    <S name="400+ loyiha" r={M.projects}><Projects dur={d(M.projects)} /></S>
     <S name="Shartnoma + smeta" r={M.contract}><Contract dur={d(M.contract)} /></S>
     <S name="3D + 360 sovg‘a" r={M.gift}><Gift360 dur={d(M.gift)} /></S>
     <S name="CTA" r={M.cta}><Cta dur={d(M.cta)} /></S>
