@@ -70,14 +70,14 @@ export const Hook: React.FC<{ dur: number }> = ({ dur }) => {
           </div>
           <div style={{ marginTop: 18, transform: `scale(${0.7 + 0.3 * q})`, opacity: Math.min(1, q * 1.4) }}>
             <span style={{ fontFamily: INTER, fontWeight: 900, fontSize: 118, color: "white", letterSpacing: -3, textShadow: SHADOW }}>{N("Arzon smeta")}</span>
-            <span style={{ fontFamily: INTER, fontWeight: 900, fontSize: 118, color: RED, textShadow: SHADOW }}>?</span>
+            <span style={{ fontFamily: INTER, fontWeight: 900, fontSize: 118, color: GOLD, textShadow: SHADOW }}>?</span>
           </div>
         </div>
       ) : null}
       {f >= B ? (
         <div style={{ position: "absolute", display: "flex", flexDirection: "column", alignItems: "center", transform: `translateX(${shake}px)` }}>
-          <div style={{ background: RED, borderRadius: 30, padding: "22px 46px", transform: `scale(${0.6 + 0.4 * stop}) rotate(${(1 - stop) * -10}deg)`, boxShadow: "0 18px 40px rgba(0,0,0,0.45)", display: "flex", alignItems: "center", gap: 18 }}>
-            <svg width={80} height={80} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...glass, borderRadius: 30, padding: "22px 46px", transform: `scale(${0.6 + 0.4 * stop}) rotate(${(1 - stop) * -10}deg)`, display: "flex", alignItems: "center", gap: 18 }}>
+            <svg width={80} height={80} viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
               <path d="M8 3h8l5 5v8l-5 5H8l-5-5V8z" />
               <path d="M12 7.5v6M12 16.5v.2" />
             </svg>

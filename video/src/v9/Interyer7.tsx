@@ -79,7 +79,7 @@ export const Interyer7: React.FC = () => (
         <Audio src={staticFile(`sfx/${file}`)} volume={vol} />
       </Sequence>
     ))}
-    <Audio name="Music: referens (r3) instrumental" src={F("music.wav")} volume={(f) => MUSIC_VOL(f)} />
+    <Audio name="Music: Pharrell – Freedom (instrumental)" src={F("music.wav")} volume={(f) => MUSIC_VOL(f)} />
   </AbsoluteFill>
 );
 
