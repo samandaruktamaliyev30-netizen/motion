@@ -11,6 +11,8 @@ import { Choy, CHOY_DURATION } from "./v6/Choy";
 import { Kimyo, KIMYO_DURATION } from "./v7/Kimyo";
 import { Savollar, SAVOLLAR_DURATION } from "./v8/Savollar";
 import { Sodda, DURATION as SODDA_DURATION } from "./v9/Sodda";
+import { Tips } from "./v10/Tips";
+import { DURATION as TIPS_DURATION } from "./v10/data";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -39,6 +41,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="Kimyo" component={Kimyo} durationInFrames={KIMYO_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="SertifikatSavollar" component={Savollar} durationInFrames={SAVOLLAR_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="DTMYangilik" component={Sodda} durationInFrames={SODDA_DURATION} fps={30} width={1080} height={1920} />
+      <Composition id="ImtihonMaslahat" component={Tips} durationInFrames={TIPS_DURATION} fps={30} width={1080} height={1920} />
     </>
   );
 };
