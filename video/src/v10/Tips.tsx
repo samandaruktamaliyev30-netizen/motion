@@ -6,6 +6,7 @@ import { toNewAlphabet as N } from "../kiut2/alphabet";
 import { CLIPS, CTA, DURATION, INTRO, PHRASES, TIPS } from "./data";
 
 // "Imtihon oldidan maslahatlar" — only camera-facing takes, pauses cut, ordered.
+// Colour: graded in ffmpeg on the 4K source (S-curve contrast, clean whites, slightly warm skin).
 // Numbers slide in from the LEFT side, a matching animated icon sits on the RIGHT,
 // both beside the face (never over it); house subtitles below the chin.
 const F = (p: string) => staticFile(`v10/${p}`);
@@ -34,7 +35,7 @@ const Camera: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const base = SCALES[i % SCALES.length];
   const s = interpolate(f, [o, o + (sb - sa)], [base, base + 0.03], clamp);
   return (
-    <AbsoluteFill style={{ transform: `scale(${s})`, transformOrigin: `${FACE.cx}px ${FACE.cy}px`, filter: "contrast(1.07) saturate(1.1) brightness(1.02)" }}>
+    <AbsoluteFill style={{ transform: `scale(${s})`, transformOrigin: `${FACE.cx}px ${FACE.cy}px`, }}>
       {children}
     </AbsoluteFill>
   );
