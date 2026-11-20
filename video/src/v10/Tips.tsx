@@ -6,7 +6,8 @@ import { toNewAlphabet as N } from "../kiut2/alphabet";
 import { CLIPS, CTA, DURATION, INTRO, PHRASES, TIPS } from "./data";
 
 // "Imtihon oldidan maslahatlar" — only camera-facing takes, pauses cut, ordered.
-// Colour: graded in ffmpeg on the 4K source (S-curve contrast, clean whites, slightly warm skin).
+// Colour: graded in ffmpeg on the 4K source — S-curve contrast, clean whites, reds pulled back
+// so the skin is natural (not flushed): curves + selectivecolor reds +cyan, slight cool balance.
 // Numbers slide in from the LEFT side, a matching animated icon sits on the RIGHT,
 // both beside the face (never over it); house subtitles below the chin.
 const F = (p: string) => staticFile(`v10/${p}`);
