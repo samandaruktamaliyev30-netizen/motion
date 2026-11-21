@@ -12,6 +12,8 @@ import { Kimyo, KIMYO_DURATION } from "./v7/Kimyo";
 import { Savollar, SAVOLLAR_DURATION } from "./v8/Savollar";
 import { Sodda, DURATION as SODDA_DURATION } from "./v9/Sodda";
 import { Tips } from "./v10/Tips";
+import { Oddiy } from "./v11/Oddiy";
+import { DURATION as ODDIY_DURATION } from "./v11/data";
 import { DURATION as TIPS_DURATION } from "./v10/data";
 
 export const RemotionRoot: React.FC = () => {
@@ -42,6 +44,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="SertifikatSavollar" component={Savollar} durationInFrames={SAVOLLAR_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="DTMYangilik" component={Sodda} durationInFrames={SODDA_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="ImtihonMaslahat" component={Tips} durationInFrames={TIPS_DURATION} fps={30} width={1080} height={1920} />
+      <Composition id="BiologiyaImtihon" component={Oddiy} durationInFrames={ODDIY_DURATION} fps={30} width={1080} height={1920} />
     </>
   );
 };
