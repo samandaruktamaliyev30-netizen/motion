@@ -4,7 +4,8 @@ import { Audio, Video } from "@remotion/media";
 import { StyleCaptions } from "../shared/StyleCaptions";
 import { CLIPS, DURATION, PHRASES } from "./data";
 
-// Simple edit: only pauses removed (meaning kept), gentle framing change on each cut,
+// Simple edit: only pauses removed (meaning kept), original colours (no grade),
+// gentle framing change on each cut,
 // house subtitles below the chin, quiet LoVibe underneath.
 const F = (p: string) => staticFile(`v11/${p}`);
 // Face (YuNet): x≈465, forehead≈464, chin≈1070 → zoom anchored on the forehead; each subtitle is
@@ -19,7 +20,7 @@ const Camera: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [sa, sb, o] = CLIPS[i];
   const s = interpolate(f, [o, o + (sb - sa)], [SCALES[i], SCALES[i] + 0.03], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
-    <AbsoluteFill style={{ transform: `scale(${s})`, transformOrigin: `${ANCHOR.x}px ${ANCHOR.y}px`, filter: "contrast(1.05) saturate(1.04)" }}>
+    <AbsoluteFill style={{ transform: `scale(${s})`, transformOrigin: `${ANCHOR.x}px ${ANCHOR.y}px` }}>
       {children}
     </AbsoluteFill>
   );
@@ -35,7 +36,6 @@ export const Oddiy: React.FC = () => {
           <Video key={i} name={`Kadr ${i + 1}`} src={F("main.mp4")} muted trimBefore={sa} from={o} durationInFrames={sb - sa} />
         ))}
       </Camera>
-      <AbsoluteFill style={{ background: "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.3) 68%, rgba(0,0,0,0.12) 100%)" }} />
       {/* each phrase sits below the speaker's lowest chin position during that phrase */}
       {PHRASES.map((p, i) => (
         <StyleCaptions key={i} phrases={[p]} top={p.top} />
