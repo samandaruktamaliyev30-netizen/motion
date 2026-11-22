@@ -160,7 +160,7 @@ export const NumCard: React.FC<{ dur: number; num: string; label: string; sub?: 
       </div>
       <div style={{ ...glass, borderRadius: 30, padding: "24px 34px 28px", opacity: interpolate(f, [8, 18], [0, 1], clamp), transform: `translateY(${interpolate(f, [8, 20], [30, 0], { ...clamp, easing: EASE })}px)` }}>
         <div style={{ fontFamily: INTER, fontWeight: 900, fontSize: 56, color: CREAM, textShadow: SHADOW, whiteSpace: "nowrap", lineHeight: 1.05 }}>{N(label)}</div>
-        {sub && <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 32, color: MUTED, textShadow: SHADOW, marginTop: 10, whiteSpace: "nowrap" }}>{N(sub)}</div>}
+        {sub && <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 32, color: MUTED, textShadow: SHADOW, marginTop: 10, whiteSpace: "pre", lineHeight: 1.3 }}>{N(sub)}</div>}
         {badge && f >= badgeAt && (
           <div style={{ display: "inline-block", marginTop: 16, padding: "8px 22px", borderRadius: 999, background: GOLD, color: NAVY, fontFamily: INTER, fontWeight: 900, fontSize: 30, letterSpacing: 3, transform: `scale(${bs})` }}>{N(badge)}</div>
         )}

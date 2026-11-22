@@ -531,7 +531,7 @@ const EVENTS: Ev[] = [
   ev("Agentlik", 339.8, 347.6, (d) => <Chip dur={d} icon={W("case")} text="O‘z agentligim" sub="jamoa yig‘yapman" />, "pop"),
   ev("A'lo yakunlasangiz", 347.7, 353.9, (d) => <Chip dur={d} icon={W("trophy")} text="Kursni a’lo yakunlasangiz" sub="jamoamga qabul qilaman" />, "pop"),
   ev("4-o'rin", 354.0, 364.6, (d) => <NumCard dur={d} num="4" label="Kursingizni sotishda" sub="yordam beraman" />, "bass", true),
-  ev("5-10 o'rin", 364.7, 376.2, (d, r) => <NumCard dur={d} num="5–10" label="1 oylik mentorlik" sub="savollaringizga javob" badge="ZOOM · OFFLINE" badgeAt={r(372.8) - r(364.7)} />, "bass", true),
+  ev("5-10 o'rin", 364.7, 376.2, (d, r) => <NumCard dur={d} num="5–10" label="1 oylik dars" sub={"Ekspertdan: tushunmagan joylarga\nindividual yordam"} badge="ONLINE · OFFLINE" badgeAt={r(372.8) - r(364.7)} />, "bass", true),
   ev("Agentlikka saralash", 381.8, 393.5, (d, r) => (
     <Stack dur={d} title="AGENTLIGIMGA OLAMAN" items={st(381.8, [[386.4, "Kreativ", W("star")], [387.6, "Shijoatli", W("rocket")], [388.6, "A’lo bitirgan", W("trophy")]])(r)} step={92} size={40} />
   ), "pop", true),
