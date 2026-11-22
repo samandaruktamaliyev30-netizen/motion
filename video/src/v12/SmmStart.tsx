@@ -11,7 +11,8 @@ import {
 // full-screen navy motion cards, lower-left keyword chips, animated numbers.
 // No subtitles (only keywords), no music, NO colour grade — footage stays exactly as shot.
 const F = (p: string) => staticFile(`v12/${p}`);
-export const SMM_DURATION = DURATION;
+const OUTRO = 105; // final "SMM — Social Media Marketing" card after the last word
+export const SMM_DURATION = DURATION + OUTRO;
 
 /* ---------- source seconds → output frame (pauses removed) ---------- */
 const T = (sec: number) => {
@@ -516,12 +517,40 @@ const EVENTS: Ev[] = [
 ];
 // every overlay that sits on the footage (not a full-screen card) reframes the speaker
 const FULL = new Set(["Hook: 17 Pro Max + MacBook Neo", "Ko'proq daromad", "Aynan siz uchun", "SMM sohasi", "1 mln obunachi", "3 ta savol", "1-savol", "Daromad bars", "Aynan siz uchun SMM", "2-savol", "3-savol", "10 ta sovg'a", "1-o'rin", "2-o'rin"]);
+const CHIME = new Set(["10 ta sovg'a", "1-o'rin", "2-o'rin"]);
 for (const e of EVENTS) if (!FULL.has(e.name) && e.name !== "Oxirigacha ko'ring") BUSY.push([T(e.a), T(e.b)]);
+
+/* ---------- outro: SMM → Social Media Marketing ---------- */
+const Outro: React.FC<{ dur: number }> = ({ dur }) => {
+  const f = useCurrentFrame();
+  const words = ["Social", "Media", "Marketing"];
+  const line = interpolate(f, [14, 34], [0, 1], { ...clamp, easing: EASE });
+  const end = interpolate(f, [dur - 14, dur], [0, 1], clamp);
+  const zoom = interpolate(f, [0, dur], [1, 1.05]);
+  return (
+    <FullCard dur={dur + 100} bloom={GOLD2}>
+      <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", transform: `scale(${zoom})` }}>
+        <Slam at={0} from={2.6} style={{ ...big(420, GOLD), letterSpacing: 6 }}>SMM</Slam>
+        <div style={{ width: 760 * line, height: 4, borderRadius: 2, background: `linear-gradient(90deg, transparent, ${GOLD}, transparent)`, margin: "18px 0 26px" }} />
+        <div style={{ display: "flex", gap: 26 }}>
+          {words.map((w, i) => (
+            <div key={w} style={{ display: "flex" }}>
+              {w.split("").map((ch, j) => {
+                const at = 18 + i * 9 + j * 1.6;
+                const k = interpolate(f, [at, at + 10], [0, 1], { ...clamp, easing: EASE });
+                return <span key={j} style={{ display: "inline-block", fontFamily: INTER, fontWeight: 600, fontSize: 58, letterSpacing: 4, color: CREAM, opacity: k, transform: `translateY(${(1 - k) * 34}px)`, filter: `blur(${(1 - k) * 6}px)` }}>{ch}</span>;
+              })}
+            </div>
+          ))}
+        </div>
+      </AbsoluteFill>
+      <AbsoluteFill style={{ backgroundColor: "black", opacity: end }} />
+    </FullCard>
+  );
+};
 
 /* =================== composition =================== */
 export const SmmStart: React.FC = () => {
-  const f = useCurrentFrame();
-  const fadeOut = interpolate(f, [DURATION - 15, DURATION], [0, 1], clamp);
   return (
     <AbsoluteFill style={{ backgroundColor: "black" }}>
       <Camera>
@@ -539,11 +568,21 @@ export const SmmStart: React.FC = () => {
           </Sequence>
         );
       })}
-      <AbsoluteFill style={{ backgroundColor: "black", opacity: fadeOut }} />
+      <Sequence name="Outro: SMM — Social Media Marketing" from={DURATION} durationInFrames={OUTRO} layout="none">
+        <Outro dur={OUTRO} />
+      </Sequence>
       {CLIPS.map(([sa, sb, o], i) => (
         <Audio key={i} name={`Ovoz ${i + 1}`} src={F("voice.wav")} trimBefore={sa} from={o} durationInFrames={sb - sa} />
       ))}
-      {/* no sound effects — voice only */}
+      {/* soft sound design: an airy whoosh on full-screen cards, a quiet chime on the prizes; nothing on small labels */}
+      {EVENTS.filter((e) => FULL.has(e.name)).map((e) => (
+        <Sequence key={`sfx-${e.name}`} name={`SFX ${e.name}`} from={Math.max(0, T(e.a) - 4)} durationInFrames={45} layout="none">
+          <Audio src={F(CHIME.has(e.name) ? "soft_chime.wav" : "soft_whoosh.wav")} volume={CHIME.has(e.name) ? 0.9 : 1} />
+        </Sequence>
+      ))}
+      <Sequence name="SFX outro" from={DURATION - 4} durationInFrames={60} layout="none">
+        <Audio src={F("soft_chime.wav")} volume={0.9} />
+      </Sequence>
     </AbsoluteFill>
   );
 };
