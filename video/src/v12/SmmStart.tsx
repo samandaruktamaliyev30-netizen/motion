@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, Easing, interpolate, Sequence, staticFile, useCurrentFrame } from "remotion";
 import { Audio, Video } from "@remotion/media";
-import { CLIPS, DURATION, SEGS } from "./clips";
+import { CLIPS, DURATION } from "./clips";
 import {
   BLUE, big, Chip, clamp, Confetti, EASE, fmt, FullCard, GOLD, glass, INTER, Item, Money, N, NAVY, NumCard,
   ORANGE, DARK_BG, CREAM, MUTED, GOLD2, DevicePhoto, Rays, Rise, SHADOW, Slam, Stack, useSpring, W,
@@ -23,42 +23,19 @@ const T = (sec: number) => {
   return DURATION;
 };
 
-/* ---------- camera: wide / medium / close on every cut ---------- */
+/* ---------- camera ---------- */
 // Face (measured on the source): centre x≈1005, y≈470, chin≈545.
 const FOCUS = { x: 1005, y: 470 };
-const SHOT = {
-  W: { s: 1.0, x: 1005, y: 470 },
-  M: { s: 1.35, x: 960, y: 440 },
-  C: { s: 1.7, x: 960, y: 420 },
-  // speaker pushed to the right third while a side panel is on screen (left 2/3 free)
-  R: { s: 1.4, x: 1380, y: 440 },
-  R2: { s: 1.6, x: 1490, y: 420 },
-};
-type Shot = keyof typeof SHOT;
-const PATTERN: Shot[] = ["C", "W", "M", "C", "W", "C", "M", "W"];
-const CUTS: number[] = (() => {
-  const pts = [...CLIPS.map((c) => c[2]), ...SEGS.map((s) => T(s))].sort((a, b) => a - b);
-  const out: number[] = [];
-  for (const p of pts) if (!out.length || p - out[out.length - 1] >= 40) out.push(p);
-  return out;
-})();
 // While a side panel / chip is on screen the speaker is framed on the right third.
 const BUSY: [number, number][] = [];
 
+// One steady frame for the whole video (no zoom in/out): speaker on the right,
+// left side kept free for the keyword panels.
+const STEADY = { s: 1.3, x: 1300, y: 440 };
 const Camera: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const f = useCurrentFrame();
-  let i = 0;
-  while (i + 1 < CUTS.length && CUTS[i + 1] <= f) i++;
-  const a = CUTS[i];
-  const b = CUTS[i + 1] ?? DURATION;
-  const busy = BUSY.some(([x, y]) => f >= x && f < y);
-  const k: Shot = busy ? (i % 2 ? "R2" : "R") : PATTERN[i % PATTERN.length];
-  const sh = SHOT[k];
-  const push = interpolate(f, [a, b], [0, 0.025], clamp);
-  const punch = interpolate(f, [a, a + 6], [0.025, 0], { ...clamp, easing: EASE });
-  const s = sh.s * (1 + push + punch);
-  const tx = sh.x - FOCUS.x * s;
-  const ty = sh.y - FOCUS.y * s;
+  const { s, x, y } = STEADY;
+  const tx = x - FOCUS.x * s;
+  const ty = y - FOCUS.y * s;
   return <AbsoluteFill style={{ transformOrigin: "0 0", transform: `translate(${tx}px, ${ty}px) scale(${s})` }}>{children}</AbsoluteFill>;
 };
 
@@ -566,11 +543,7 @@ export const SmmStart: React.FC = () => {
       {CLIPS.map(([sa, sb, o], i) => (
         <Audio key={i} name={`Ovoz ${i + 1}`} src={F("voice.wav")} trimBefore={sa} from={o} durationInFrames={sb - sa} />
       ))}
-      {EVENTS.filter((e) => e.sfx).map((e) => (
-        <Sequence key={`sfx-${e.name}`} from={T(e.a)} durationInFrames={30} layout="none">
-          <Audio src={staticFile(`sfx/${e.sfx}.wav`)} volume={e.sfx === "pop" ? 0.18 : 0.3} />
-        </Sequence>
-      ))}
+      {/* no sound effects — voice only */}
     </AbsoluteFill>
   );
 };
