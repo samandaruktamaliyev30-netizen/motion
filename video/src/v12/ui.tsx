@@ -87,7 +87,7 @@ export const Rise: React.FC<{ at: number; children: React.ReactNode; style?: Rea
 export const big = (size: number, color: string = CREAM): React.CSSProperties => ({ fontFamily: BEBAS, fontWeight: 800, fontSize: Math.round(size * 0.72), color, lineHeight: 1.08, letterSpacing: 0, fontVariantNumeric: "lining-nums", textShadow: SHADOW, whiteSpace: "nowrap" });
 
 /* ======================= lower-left chip (ref: "icon | Vaqt") ======================= */
-export const Chip: React.FC<{ dur: number; icon?: React.ReactNode; text: string; sub?: string; accent?: string; left?: number; bottom?: number }> = ({ dur, icon, text, sub, accent = GOLD, left = 90, bottom = 96 }) => {
+export const Chip: React.FC<{ dur: number; icon?: React.ReactNode; text: string; sub?: string; accent?: string; left?: number; bottom?: number }> = ({ dur, icon, text, sub, accent = GOLD, left = 90, bottom = 190 }) => {
   const f = useCurrentFrame();
   const s = useSpring(0, { damping: 15, stiffness: 180 });
   const wipe = interpolate(f, [3, 16], [0, 100], { ...clamp, easing: EASE });
@@ -110,7 +110,7 @@ export const Chip: React.FC<{ dur: number; icon?: React.ReactNode; text: string;
 
 /* ======================= stacking list on the left (below the chin line) ======================= */
 export type Item = { at: number; text: string; icon?: React.ReactNode; num?: string };
-export const Stack: React.FC<{ dur: number; items: Item[]; top?: number; left?: number; step?: number; size?: number; title?: string }> = ({ dur, items, top = 560, left = 90, step = 96, size = 40, title }) => {
+export const Stack: React.FC<{ dur: number; items: Item[]; top?: number; left?: number; step?: number; size?: number; title?: string }> = ({ dur, items, top = 470, left = 90, step = 96, size = 40, title }) => {
   const f = useCurrentFrame();
   const out = interpolate(f, [dur - 8, dur], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
   const shown = items.filter((it) => f >= it.at);

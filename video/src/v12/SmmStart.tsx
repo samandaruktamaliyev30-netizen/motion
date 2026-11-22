@@ -83,17 +83,17 @@ const HookCard: React.FC<{ dur: number; r: (s: number) => number }> = ({ dur, r 
     <FullCard dur={dur} bg={DARK_BG} bloom={ORANGE}>
       <Rays color={ORANGE} opacity={0.16} />
       <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
-        <div style={{ position: "absolute", left: phoneX, top: 10 + float + (1 - ps) * 900, transform: `rotate(${(1 - ps) * -18}deg) scale(${0.8 + 0.2 * ps})`, opacity: Math.min(1, ps * 2) }}>
-          <DevicePhoto kind="phone" h={860} />
+        <div style={{ position: "absolute", left: phoneX, top: 150 + float + (1 - ps) * 900, transform: `rotate(${(1 - ps) * -18}deg) scale(${0.8 + 0.2 * ps})`, opacity: Math.min(1, ps * 2) }}>
+          <DevicePhoto kind="phone" h={800} />
         </div>
         {lOn && (
-          <div style={{ position: "absolute", left: 1140 + (1 - ls) * 900, top: -10 - float * 0.6, transform: `rotate(${(1 - ls) * 14}deg)`, opacity: Math.min(1, ls * 2) }}>
-            <DevicePhoto kind="laptop" h={900} />
+          <div style={{ position: "absolute", left: 1140 + (1 - ls) * 900, top: 140 - float * 0.6, transform: `rotate(${(1 - ls) * 14}deg)`, opacity: Math.min(1, ls * 2) }}>
+            <DevicePhoto kind="laptop" h={840} />
           </div>
         )}
-        {lOn && <Slam at={r(1.05) + 4} style={{ position: "absolute", left: 960 - 30, top: 380, ...big(170, GOLD) }}>+</Slam>}
-        <div style={{ position: "absolute", left: phoneX + 170, top: 820 + float, opacity: interpolate(f, [q1 - 6, q1], [1, 0], clamp) }}><Slam at={2} style={big(80)}>17 PRO MAX</Slam></div>
-        <div style={{ position: "absolute", bottom: 40, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 26 }}>
+        {lOn && <Slam at={r(1.05) + 4} style={{ position: "absolute", left: 960 - 30, top: 480, ...big(170, GOLD) }}>+</Slam>}
+        <div style={{ position: "absolute", left: 0, right: 0, textAlign: "center", top: 40, opacity: interpolate(f, [q1 - 6, q1], [1, 0], clamp) }}><Slam at={2} style={big(80)}>17 PRO MAX</Slam></div>
+        <div style={{ position: "absolute", top: 40, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 26 }}>
           <Slam at={q1} style={big(110)}>{N("QANDAY QILIB")}</Slam>
           <Slam at={q2} style={big(110, GOLD)}>{N("YUTIB OLISH")}</Slam>
           <Slam at={q2 + 6} style={big(110)}>{N("MUMKIN?")}</Slam>
@@ -111,7 +111,7 @@ const WatchBar: React.FC<{ dur: number }> = ({ dur }) => {
   const out = interpolate(f, [dur - 6, dur], [1, 0], clamp);
   const inn = interpolate(f, [0, 8], [0, 1], { ...clamp, easing: EASE });
   return (
-    <div style={{ position: "absolute", left: 90, right: 90, bottom: 70, opacity: inn * out }}>
+    <div style={{ position: "absolute", left: 90, right: 90, bottom: 190, opacity: inn * out }}>
       <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 22 }}>
         <div style={{ width: 0, height: 0, borderTop: "20px solid transparent", borderBottom: "20px solid transparent", borderLeft: "32px solid white" }} />
         <Rise at={2} style={{ fontFamily: INTER, fontWeight: 900, fontSize: 52, color: CREAM, textShadow: SHADOW }}>{N("Videoni oxirigacha ko‘ring")}</Rise>
@@ -204,12 +204,12 @@ const MlnCard: React.FC<{ dur: number }> = ({ dur }) => {
   const rows = 4;
   return (
     <FullCard dur={dur}>
-      <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
+      <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", paddingBottom: 300 }}>
         <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 40, letterSpacing: 10, color: GOLD, marginBottom: 10 }}>{N("3 YIL · 25 TA LOYIHA")}</div>
         <div style={{ ...big(300), fontVariantNumeric: "lining-nums tabular-nums" }}>{fmt(n)}</div>
         <Rise at={20} style={{ ...big(110), color: GOLD }}>{N("OBUNACHI")}</Rise>
       </AbsoluteFill>
-      <div style={{ position: "absolute", left: 960 - (cols * 64) / 2, bottom: 40, display: "grid", gridTemplateColumns: `repeat(${cols}, 56px)`, gap: 8 }}>
+      <div style={{ position: "absolute", left: 960 - (cols * 64) / 2, bottom: 150, display: "grid", gridTemplateColumns: `repeat(${cols}, 56px)`, gap: 8 }}>
         {Array.from({ length: cols * rows }).map((_, i) => {
           const on = i / (cols * rows) < t;
           return <div key={i} style={{ width: 56, height: 56, color: on ? GOLD : "rgba(255,255,255,0.15)" }}>{on ? <div style={{ color: GOLD, width: "100%", height: "100%" }}>{UserDot}</div> : UserDot}</div>;
@@ -276,20 +276,20 @@ const BarsCard: React.FC<{ dur: number }> = ({ dur }) => {
       <div style={{ position: "absolute", top: 70, left: 0, right: 0, textAlign: "center" }}>
         <Rise at={0} style={big(110)}>{N("SMM'DA OYLIK DAROMAD")}</Rise>
       </div>
-      <div style={{ position: "absolute", left: 300, right: 300, bottom: 110, height: 700, display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
+      <div style={{ position: "absolute", left: 300, right: 300, bottom: 180, height: 640, display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
         {bars.map((b, i) => {
           const g = interpolate(f, [6 + i * 10, 34 + i * 10], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
           const top = i === 2;
           return (
             <div key={i} style={{ width: 340, display: "flex", flexDirection: "column", alignItems: "center" }}>
               <div style={{ ...big(top ? 84 : 66, top ? GOLD : CREAM), opacity: g, marginBottom: 14 }}>{b.v}</div>
-              <div style={{ width: 240, height: 470 * b.h * g, borderRadius: "22px 22px 6px 6px", background: top ? `linear-gradient(${GOLD}, ${GOLD2})` : `linear-gradient(${BLUE}, #9c3f2b)`, boxShadow: top ? `0 0 40px ${GOLD}66` : "none" }} />
+              <div style={{ width: 240, height: 400 * b.h * g, borderRadius: "22px 22px 6px 6px", background: top ? `linear-gradient(${GOLD}, ${GOLD2})` : `linear-gradient(${BLUE}, #9c3f2b)`, boxShadow: top ? `0 0 40px ${GOLD}66` : "none" }} />
               <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 36, color: CREAM, marginTop: 18, whiteSpace: "nowrap" }}>{N(b.l)}</div>
             </div>
           );
         })}
       </div>
-      <div style={{ position: "absolute", left: 300, right: 300, bottom: 104, height: 4, background: "rgba(255,255,255,0.4)" }} />
+      <div style={{ position: "absolute", left: 300, right: 300, bottom: 174, height: 4, background: "rgba(255,255,255,0.4)" }} />
     </FullCard>
   );
 };
@@ -303,17 +303,17 @@ const PrizeQCard: React.FC<{ dur: number }> = ({ dur }) => {
   return (
     <FullCard dur={dur} bg={DARK_BG} bloom={ORANGE}>
       <Rays color={ORANGE} opacity={0.14} />
-      <div style={{ position: "absolute", left: 230, top: 60 + float + (1 - ps) * 900, transform: `rotate(${(1 - ps) * -20}deg)` }}>
-        <DevicePhoto kind="phone" h={760} />
+      <div style={{ position: "absolute", left: 230, top: 220 + float + (1 - ps) * 900, transform: `rotate(${(1 - ps) * -20}deg)` }}>
+        <DevicePhoto kind="phone" h={720} />
       </div>
-      <div style={{ position: "absolute", left: 1090 + (1 - ls) * 1000, top: 20 - float * 0.6 }}>
-        <DevicePhoto kind="laptop" h={800} />
+      <div style={{ position: "absolute", left: 1090 + (1 - ls) * 1000, top: 200 - float * 0.6 }}>
+        <DevicePhoto kind="laptop" h={740} />
       </div>
-      <div style={{ position: "absolute", left: 960 - 160, top: 330, display: "flex", alignItems: "baseline", gap: 6 }}>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 10, display: "flex", justifyContent: "center", alignItems: "baseline", gap: 6 }}>
         <Slam at={0} from={2.6} style={big(220, GOLD)}>3</Slam>
         <Rise at={4} style={big(110)}>-SAVOL</Rise>
       </div>
-      <div style={{ position: "absolute", bottom: 50, left: 0, right: 0, textAlign: "center" }}>
+      <div style={{ position: "absolute", top: 160, left: 0, right: 0, textAlign: "center" }}>
         <Rise at={18} style={{ fontFamily: INTER, fontWeight: 800, fontSize: 60, color: CREAM, textShadow: SHADOW }}>{N("Qanday qilib yutib olish mumkin?")}</Rise>
       </div>
     </FullCard>
@@ -383,7 +383,7 @@ const Formula: React.FC<{ dur: number; r: (s: number) => number }> = ({ dur, r }
   };
   const op = (t: string, at: number) => <div style={{ ...big(80, GOLD), opacity: f >= at ? 1 : 0 }}>{t}</div>;
   return (
-    <div style={{ position: "absolute", left: 90, bottom: 90, display: "flex", alignItems: "center", gap: 22, opacity: out }}>
+    <div style={{ position: "absolute", left: 90, bottom: 190, display: "flex", alignItems: "center", gap: 22, opacity: out }}>
       {box("Test bali", 0)}
       {op("+", r(300.6))}
       {box("Kunlik ballar", r(300.6))}
@@ -400,7 +400,7 @@ const Cta: React.FC<{ dur: number }> = ({ dur }) => {
   const bob = Math.abs(Math.sin(f * 0.16)) * 18;
   const fade = interpolate(f, [dur - 15, dur], [1, 0], clamp);
   return (
-    <div style={{ position: "absolute", left: 90, bottom: 80, display: "flex", alignItems: "center", gap: 26, opacity: Math.min(1, s * 1.5) * fade, transform: `translateY(${(1 - s) * 100}px)` }}>
+    <div style={{ position: "absolute", left: 90, bottom: 190, display: "flex", alignItems: "center", gap: 26, opacity: Math.min(1, s * 1.5) * fade, transform: `translateY(${(1 - s) * 100}px)` }}>
       <div style={{ width: 110, height: 110, borderRadius: 32, background: GOLD, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ width: 62, height: 62, color: NAVY, transform: `translateY(${bob - 9}px)` }}>
           <svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M50 12 V84 M22 58 L50 86 L78 58" fill="none" stroke={NAVY} strokeWidth={10} strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -478,7 +478,7 @@ const EVENTS: Ev[] = [
   ev("1 mln obunachi", 55.9, 61.3, (d) => <MlnCard dur={d} />, "rm-whoosh"),
   ev("3 ta savol", 61.4, 64.05, (d) => <ThreeCard dur={d} />, "rm-whip"),
   ev("3 savol ro'yxati", 64.1, 86.5, (d, r) => (
-    <Stack dur={d} items={st(64.1, [[64.1, "Qanday va qancha pul topish mumkin?", undefined, "1"], [70.0, "SMM kimlarga to‘g‘ri keladi?", undefined, "2"], [75.0, "Sovg‘alarni qanday yutib olaman?", undefined, "3"]])(r)} step={110} size={40} top={600} />
+    <Stack dur={d} items={st(64.1, [[64.1, "Qanday va qancha pul topish mumkin?", undefined, "1"], [70.0, "SMM kimlarga to‘g‘ri keladi?", undefined, "2"], [75.0, "Sovg‘alarni qanday yutib olaman?", undefined, "3"]])(r)} step={110} size={40} top={520} />
   ), "pop", true),
   // ---------- Q1: money ----------
   ev("1-savol", 86.6, 91.9, (d) => <SectionCard dur={d} n="1" q="Qanday va qancha pul topish mumkin?" />, "rm-whoosh"),
