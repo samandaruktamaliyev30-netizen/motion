@@ -4,7 +4,7 @@ import { Audio, Video } from "@remotion/media";
 import { CLIPS, DURATION, SEGS } from "./clips";
 import {
   BLUE, big, Chip, clamp, Confetti, EASE, fmt, FullCard, GOLD, glass, INTER, Item, Money, N, NAVY, NumCard,
-  ORANGE, DARK_BG, DevicePhoto, Rays, Rise, SHADOW, Slam, Stack, useSpring, W,
+  ORANGE, DARK_BG, CREAM, MUTED, GOLD2, DevicePhoto, Rays, Rise, SHADOW, Slam, Stack, useSpring, W,
 } from "./ui";
 
 // "SMM Start" — YouTube 16:9 edit after the references: wide/close jump framing on every cut,
@@ -114,7 +114,7 @@ const WatchBar: React.FC<{ dur: number }> = ({ dur }) => {
     <div style={{ position: "absolute", left: 90, right: 90, bottom: 70, opacity: inn * out }}>
       <div style={{ display: "flex", alignItems: "center", gap: 18, marginBottom: 22 }}>
         <div style={{ width: 0, height: 0, borderTop: "20px solid transparent", borderBottom: "20px solid transparent", borderLeft: "32px solid white" }} />
-        <Rise at={2} style={{ fontFamily: INTER, fontWeight: 900, fontSize: 52, color: "white", textShadow: SHADOW }}>{N("Videoni oxirigacha ko‘ring")}</Rise>
+        <Rise at={2} style={{ fontFamily: INTER, fontWeight: 900, fontSize: 52, color: CREAM, textShadow: SHADOW }}>{N("Videoni oxirigacha ko‘ring")}</Rise>
       </div>
       <div style={{ height: 10, borderRadius: 5, background: "rgba(255,255,255,0.3)" }}>
         <div style={{ position: "relative", width: `${p * 100}%`, height: 10, borderRadius: 5, background: "#FF2A3A" }}>
@@ -134,7 +134,7 @@ const IncomeCard: React.FC<{ dur: number; r: (s: number) => number }> = ({ dur, 
   return (
     <FullCard dur={dur}>
       <div style={{ position: "absolute", top: 120, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 30 }}>
-        <Slam at={0} style={big(150, "rgba(255,255,255,0.45)")}>{N("KREDIT")}</Slam>
+        <Slam at={0} style={big(150, MUTED)}>{N("KREDIT")}</Slam>
         <Slam at={r(9.1)} style={big(150)}>{N("TEZROQ YOPISH")}</Slam>
       </div>
       <svg width="1920" height="1080" style={{ position: "absolute", inset: 0 }}>
@@ -165,7 +165,7 @@ const WordsCard: React.FC<{ dur: number; words: { t: string; at: number; gold?: 
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", transform: `scale(${zoom})` }}>
         {icon && <Slam at={0} style={{ width: 130, height: 130, marginBottom: 30 }}>{icon}</Slam>}
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0 36px", maxWidth: 1600 }}>
-          {words.map((w, i) => <Slam key={i} at={w.at} style={big(w.size ?? 210, w.gold ? GOLD : "white")}>{N(w.t)}</Slam>)}
+          {words.map((w, i) => <Slam key={i} at={w.at} style={big(w.size ?? 210, w.gold ? GOLD : CREAM)}>{N(w.t)}</Slam>)}
         </div>
       </AbsoluteFill>
     </FullCard>
@@ -206,7 +206,7 @@ const MlnCard: React.FC<{ dur: number }> = ({ dur }) => {
     <FullCard dur={dur}>
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
         <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 40, letterSpacing: 10, color: GOLD, marginBottom: 10 }}>{N("3 YIL · 25 TA LOYIHA")}</div>
-        <div style={{ ...big(300), fontVariantNumeric: "tabular-nums" }}>{fmt(n)}</div>
+        <div style={{ ...big(300), fontVariantNumeric: "lining-nums tabular-nums" }}>{fmt(n)}</div>
         <Rise at={20} style={{ ...big(110), color: GOLD }}>{N("OBUNACHI")}</Rise>
       </AbsoluteFill>
       <div style={{ position: "absolute", left: 960 - (cols * 64) / 2, bottom: 40, display: "grid", gridTemplateColumns: `repeat(${cols}, 56px)`, gap: 8 }}>
@@ -238,7 +238,7 @@ const ThreeCard: React.FC<{ dur: number }> = ({ dur }) => {
       </div>
       <div style={{ position: "absolute", left: 1010, top: 330 }}>
         <Rise at={8} style={big(200)}>{N("TA SAVOL")}</Rise>
-        <Rise at={16} style={{ fontFamily: INTER, fontWeight: 700, fontSize: 50, color: "rgba(255,255,255,0.85)", marginTop: 20 }}>{N("— va javoblar")}</Rise>
+        <Rise at={16} style={{ fontFamily: INTER, fontWeight: 700, fontSize: 50, color: MUTED, marginTop: 20 }}>{N("— va javoblar")}</Rise>
       </div>
     </FullCard>
   );
@@ -257,7 +257,7 @@ const SectionCard: React.FC<{ dur: number; n: string; q: string; children?: Reac
           <Rise at={6} style={big(200)}>-SAVOL</Rise>
         </div>
         <div style={{ width: 900 * line, height: 6, borderRadius: 3, background: GOLD, margin: "20px 0 30px" }} />
-        <Rise at={12} style={{ fontFamily: INTER, fontWeight: 800, fontSize: 64, color: "white", textAlign: "center" }}>{N(q)}</Rise>
+        <Rise at={12} style={{ fontFamily: INTER, fontWeight: 800, fontSize: 64, color: CREAM, textAlign: "center" }}>{N(q)}</Rise>
       </AbsoluteFill>
     </FullCard>
   );
@@ -282,9 +282,9 @@ const BarsCard: React.FC<{ dur: number }> = ({ dur }) => {
           const top = i === 2;
           return (
             <div key={i} style={{ width: 340, display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <div style={{ ...big(top ? 84 : 66, top ? GOLD : "white"), opacity: g, marginBottom: 14 }}>{b.v}</div>
-              <div style={{ width: 240, height: 470 * b.h * g, borderRadius: "22px 22px 6px 6px", background: top ? `linear-gradient(${GOLD}, #C8862A)` : `linear-gradient(${BLUE}, #213A9C)`, boxShadow: top ? `0 0 40px ${GOLD}66` : "none" }} />
-              <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 36, color: "white", marginTop: 18, whiteSpace: "nowrap" }}>{N(b.l)}</div>
+              <div style={{ ...big(top ? 84 : 66, top ? GOLD : CREAM), opacity: g, marginBottom: 14 }}>{b.v}</div>
+              <div style={{ width: 240, height: 470 * b.h * g, borderRadius: "22px 22px 6px 6px", background: top ? `linear-gradient(${GOLD}, ${GOLD2})` : `linear-gradient(${BLUE}, #9c3f2b)`, boxShadow: top ? `0 0 40px ${GOLD}66` : "none" }} />
+              <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 36, color: CREAM, marginTop: 18, whiteSpace: "nowrap" }}>{N(b.l)}</div>
             </div>
           );
         })}
@@ -314,7 +314,7 @@ const PrizeQCard: React.FC<{ dur: number }> = ({ dur }) => {
         <Rise at={4} style={big(110)}>-SAVOL</Rise>
       </div>
       <div style={{ position: "absolute", bottom: 50, left: 0, right: 0, textAlign: "center" }}>
-        <Rise at={18} style={{ fontFamily: INTER, fontWeight: 800, fontSize: 60, color: "white", textShadow: SHADOW }}>{N("Qanday qilib yutib olish mumkin?")}</Rise>
+        <Rise at={18} style={{ fontFamily: INTER, fontWeight: 800, fontSize: 60, color: CREAM, textShadow: SHADOW }}>{N("Qanday qilib yutib olish mumkin?")}</Rise>
       </div>
     </FullCard>
   );
@@ -332,7 +332,7 @@ const TenCard: React.FC<{ dur: number }> = ({ dur }) => {
       <div style={{ position: "absolute", left: 210, right: 210, top: 640, display: "flex", justifyContent: "space-between" }}>
         {Array.from({ length: 10 }).map((_, i) => {
           const s = interpolate(f, [8 + i * 2.5, 18 + i * 2.5], [0, 1], { ...clamp, easing: Easing.out(Easing.back(2.2)) });
-          return <div key={i} style={{ width: 120, height: 120, color: i < 2 ? GOLD : "white", transform: `scale(${s}) translateY(${Math.sin(f * 0.15 + i) * 8}px)` }}><div style={{ color: i < 2 ? GOLD : "white", width: "100%", height: "100%" }}>{IcGift}</div></div>;
+          return <div key={i} style={{ width: 120, height: 120, color: i < 2 ? GOLD : CREAM, transform: `scale(${s}) translateY(${Math.sin(f * 0.15 + i) * 8}px)` }}><div style={{ color: i < 2 ? GOLD : CREAM, width: "100%", height: "100%" }}>{IcGift}</div></div>;
         })}
       </div>
     </FullCard>
@@ -351,7 +351,7 @@ const PlaceCard: React.FC<{ dur: number; place: string; name: string; device: "p
   const f = useCurrentFrame();
   const ds = useSpring(6, { damping: 12, stiffness: 110, mass: 0.9 });
   const float = Math.sin(f * 0.09) * 10;
-  const medal = place === "1" ? GOLD : "#D9DDE6";
+  const medal = place === "1" ? GOLD : "#E6DCCB";
   return (
     <FullCard dur={dur} bg={DARK_BG} bloom={device === "phone" ? ORANGE : GOLD}>
       <Rays color={medal} opacity={0.14} />
@@ -360,7 +360,7 @@ const PlaceCard: React.FC<{ dur: number; place: string; name: string; device: "p
           <Slam at={0} from={2.6} style={big(380, medal)}>{place}</Slam>
           <Rise at={6} style={big(170)}>{N("-O‘RIN")}</Rise>
         </div>
-        <Rise at={14} style={{ ...big(110, "white"), marginTop: 10 }}>{name}</Rise>
+        <Rise at={14} style={{ ...big(110), marginTop: 10 }}>{name}</Rise>
         {note && f >= noteAt && (
           <Rise at={noteAt} style={{ fontFamily: INTER, fontWeight: 700, fontSize: 44, color: GOLD, marginTop: 24 }}>{N(note)}</Rise>
         )}
@@ -379,7 +379,7 @@ const Formula: React.FC<{ dur: number; r: (s: number) => number }> = ({ dur, r }
   const out = interpolate(f, [dur - 8, dur], [1, 0], clamp);
   const box = (t: string, at: number, gold = false) => {
     const s = interpolate(f, [at, at + 10], [0, 1], { ...clamp, easing: Easing.out(Easing.back(1.8)) });
-    return <div style={{ ...glass, background: gold ? GOLD : glass.background, color: gold ? NAVY : "white", padding: "18px 30px", borderRadius: 24, fontFamily: INTER, fontWeight: 800, fontSize: 40, transform: `scale(${s})`, whiteSpace: "nowrap" }}>{N(t)}</div>;
+    return <div style={{ ...glass, background: gold ? GOLD : glass.background, color: gold ? NAVY : CREAM, padding: "18px 30px", borderRadius: 24, fontFamily: INTER, fontWeight: 800, fontSize: 40, transform: `scale(${s})`, whiteSpace: "nowrap" }}>{N(t)}</div>;
   };
   const op = (t: string, at: number) => <div style={{ ...big(80, GOLD), opacity: f >= at ? 1 : 0 }}>{t}</div>;
   return (
@@ -407,7 +407,7 @@ const Cta: React.FC<{ dur: number }> = ({ dur }) => {
         </div>
       </div>
       <div style={{ ...glass, borderRadius: 30, padding: "20px 36px" }}>
-        <div style={{ fontFamily: INTER, fontWeight: 900, fontSize: 52, color: "white", whiteSpace: "nowrap" }}>{N("Kurs haqida batafsil — tavsifda")}</div>
+        <div style={{ fontFamily: INTER, fontWeight: 900, fontSize: 52, color: CREAM, whiteSpace: "nowrap" }}>{N("Kurs haqida batafsil — tavsifda")}</div>
         <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 32, color: GOLD, marginTop: 4, whiteSpace: "nowrap" }}>{N("Hoziroq ro‘yxatdan o‘ting")}</div>
       </div>
     </div>
@@ -447,7 +447,7 @@ const Stats: React.FC<{ dur: number; r: (s: number) => number }> = ({ dur, r }) 
         return (
           <div key={i} style={{ ...glass, width: 190, height: 200, borderRadius: 30, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", transform: `scale(${k})`, opacity: k > 0 ? 1 : 0 }}>
             <div style={{ ...big(120, GOLD), textShadow: "none" }}>{Math.round(c)}{t.suf}</div>
-            <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 28, color: "white", whiteSpace: "nowrap" }}>{N(t.l)}</div>
+            <div style={{ fontFamily: INTER, fontWeight: 700, fontSize: 28, color: CREAM, whiteSpace: "nowrap" }}>{N(t.l)}</div>
           </div>
         );
       })}
