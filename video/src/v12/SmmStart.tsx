@@ -383,7 +383,7 @@ const Formula: React.FC<{ dur: number; r: (s: number) => number }> = ({ dur, r }
   };
   const op = (t: string, at: number) => <div style={{ ...big(80, GOLD), opacity: f >= at ? 1 : 0 }}>{t}</div>;
   return (
-    <div style={{ position: "absolute", left: 90, bottom: 190, display: "flex", alignItems: "center", gap: 22, opacity: out }}>
+    <div style={{ position: "absolute", left: 90, top: 500, display: "flex", alignItems: "center", gap: 22, opacity: out }}>
       {box("Test bali", 0)}
       {op("+", r(300.6))}
       {box("Kunlik ballar", r(300.6))}
@@ -400,7 +400,7 @@ const Cta: React.FC<{ dur: number }> = ({ dur }) => {
   const bob = Math.abs(Math.sin(f * 0.16)) * 18;
   const fade = interpolate(f, [dur - 15, dur], [1, 0], clamp);
   return (
-    <div style={{ position: "absolute", left: 90, bottom: 190, display: "flex", alignItems: "center", gap: 26, opacity: Math.min(1, s * 1.5) * fade, transform: `translateY(${(1 - s) * 100}px)` }}>
+    <div style={{ position: "absolute", left: 90, top: 480, display: "flex", alignItems: "center", gap: 26, opacity: Math.min(1, s * 1.5) * fade, transform: `translateY(${(1 - s) * 100}px)` }}>
       <div style={{ width: 110, height: 110, borderRadius: 32, background: GOLD, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ width: 62, height: 62, color: NAVY, transform: `translateY(${bob - 9}px)` }}>
           <svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M50 12 V84 M22 58 L50 86 L78 58" fill="none" stroke={NAVY} strokeWidth={10} strokeLinecap="round" strokeLinejoin="round" /></svg>

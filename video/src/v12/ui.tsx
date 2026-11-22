@@ -87,7 +87,7 @@ export const Rise: React.FC<{ at: number; children: React.ReactNode; style?: Rea
 export const big = (size: number, color: string = CREAM): React.CSSProperties => ({ fontFamily: BEBAS, fontWeight: 800, fontSize: Math.round(size * 0.72), color, lineHeight: 1.08, letterSpacing: 0, fontVariantNumeric: "lining-nums", textShadow: SHADOW, whiteSpace: "nowrap" });
 
 /* ======================= lower-left chip (ref: "icon | Vaqt") ======================= */
-export const Chip: React.FC<{ dur: number; icon?: React.ReactNode; text: string; sub?: string; accent?: string; left?: number; bottom?: number }> = ({ dur, icon, text, sub, accent = GOLD, left = 90, bottom = 190 }) => {
+export const Chip: React.FC<{ dur: number; icon?: React.ReactNode; text: string; sub?: string; accent?: string; left?: number; bottom?: number }> = ({ dur, icon, text, sub, accent = GOLD, left = 90, bottom = 420 }) => {
   const f = useCurrentFrame();
   const s = useSpring(0, { damping: 15, stiffness: 180 });
   const wipe = interpolate(f, [3, 16], [0, 100], { ...clamp, easing: EASE });
