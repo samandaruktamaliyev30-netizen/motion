@@ -521,8 +521,8 @@ const EVENTS: Ev[] = [
     <Stack dur={d} items={st(286.5, [[287.9, "Kurs yakunida", W("cap")], [293.5, "Test", W("test")], [297.1, "Eng yuqori ball", W("trophy")]])(r)} step={92} size={40} />
   ), "pop", true),
   ev("Formula", 299.0, 306.9, (d, r) => <Formula dur={d} r={(s) => r(s) - r(299.0)} />, "pop"),
-  ev("Top-10", 307.0, 311.5, (d) => <Chip dur={d} icon={W("trophy")} text="TOP-10 · umumiy ball" />, "pop"),
-  ev("1-o'rin", 311.6, 317.95, (d) => <PlaceCard dur={d} place="1" name="17 PRO MAX" device="phone" />, "rm-whoosh"),
+  ev("Top-10", 307.0, 315.4, (d) => <Chip dur={d} icon={W("trophy")} text="TOP-10 · umumiy ball" />, "pop"),
+  ev("1-o'rin", 315.45, 317.95, (d) => <PlaceCard dur={d} place="1" name="17 PRO MAX" device="phone" />, "rm-whoosh"),
   ev("2-o'rin", 317.95, 323.4, (d, r) => <PlaceCard dur={d} place="2" name="MACBOOK NEO" device="laptop" note="Shaxsan o‘zim topshiraman" noteAt={r(321.7) - r(317.95)} />, "rm-whoosh"),
   ev("3-o'rin", 323.45, 330.0, (d) => <NumCard dur={d} num="3" label="Jamoamga ishga olaman" sub="3-o‘rin" />, "bass", true),
   ev("Biznes egalari", 330.0, 339.6, (d, r) => (
