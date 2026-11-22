@@ -487,7 +487,7 @@ const EVENTS: Ev[] = [
   ev("Daromad bars", 110.55, 116.5, (d) => <BarsCard dur={d} />, "rm-whoosh"),
   ev("Talaba", 116.9, 119.6, (d) => <Chip dur={d} icon={W("cap")} text="Men ham talabaman" />, "pop"),
   ev("Kun tartibi", 119.8, 128.2, (d, r) => (
-    <Stack dur={d} items={st(119.8, [[119.9, "Ertalab — o‘qish", W("cap")], [121.5, "Keyin — o‘quvchilarim", W("users")], [125.6, "Online — uydan yoki kafedan", W("globe")]])(r)} step={92} size={38} />
+    <Stack dur={d} items={st(119.8, [[119.9, "Ertalab — o‘qish", W("cap")], [121.5, "Darsdan so‘ng — loyihalarimga", W("case")], [125.6, "Online — uydan yoki kafedan", W("globe")]])(r)} step={92} size={38} />
   ), "pop", true),
   ev("$2000-3000", 128.3, 135.5, (d) => <Money dur={d} label="Oylik daromadim" a={2000} b={3000} sub="qayerda bo‘lishimdan qat’i nazar" />, "ding", true),
   ev("O'zim to'layman", 135.7, 142.2, (d, r) => (
