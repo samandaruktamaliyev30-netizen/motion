@@ -375,18 +375,14 @@ const Formula: React.FC<{ dur: number; r: (s: number) => number }> = ({ dur, r }
 const Cta: React.FC<{ dur: number }> = ({ dur }) => {
   const f = useCurrentFrame();
   const s = useSpring(0, { damping: 14, stiffness: 140 });
-  const bob = Math.abs(Math.sin(f * 0.16)) * 18;
+  const as = useSpring(8, { damping: 12, stiffness: 160 });
+  const bob = Math.abs(Math.sin(f * 0.14)) * 16;
   const fade = interpolate(f, [dur - 15, dur], [1, 0], clamp);
   return (
-    <div style={{ position: "absolute", left: 90, top: 480, display: "flex", alignItems: "center", gap: 26, opacity: Math.min(1, s * 1.5) * fade, transform: `translateY(${(1 - s) * 100}px)` }}>
-      <div style={{ width: 110, height: 110, borderRadius: 32, background: GOLD, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ width: 62, height: 62, color: NAVY, transform: `translateY(${bob - 9}px)` }}>
-          <svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M50 12 V84 M22 58 L50 86 L78 58" fill="none" stroke={NAVY} strokeWidth={10} strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </div>
-      </div>
-      <div style={{ ...glass, borderRadius: 30, padding: "20px 36px" }}>
-        <div style={{ fontFamily: INTER, fontWeight: 900, fontSize: 52, color: CREAM, whiteSpace: "nowrap" }}>{N("Kurs haqida batafsil — tavsifda")}</div>
-        <div style={{ fontFamily: INTER, fontWeight: 600, fontSize: 32, color: GOLD, marginTop: 4, whiteSpace: "nowrap" }}>{N("Hoziroq ro‘yxatdan o‘ting")}</div>
+    <div style={{ position: "absolute", left: 90, top: 470, display: "flex", flexDirection: "column", alignItems: "center", gap: 18, opacity: Math.min(1, s * 1.5) * fade, transform: `translateY(${(1 - s) * 80}px)` }}>
+      <div style={{ ...glass, borderRadius: 24, padding: "16px 30px 18px", fontFamily: INTER, fontWeight: 800, fontSize: 40, color: CREAM, whiteSpace: "nowrap" }}>{N("Kurs haqida batafsil ma’lumot")}</div>
+      <div style={{ width: 84, height: 84, borderRadius: 42, background: `linear-gradient(180deg, ${GOLD}, ${GOLD2})`, display: "flex", alignItems: "center", justifyContent: "center", transform: `scale(${as}) translateY(${bob}px)`, boxShadow: "0 10px 30px rgba(217,169,79,0.35)" }}>
+        <svg viewBox="0 0 100 100" width="48" height="48"><path d="M50 14 V82 M24 58 L50 84 L76 58" fill="none" stroke={NAVY} strokeWidth={11} strokeLinecap="round" strokeLinejoin="round" /></svg>
       </div>
     </div>
   );

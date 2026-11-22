@@ -150,7 +150,7 @@ export const NumCard: React.FC<{ dur: number; num: string; label: string; sub?: 
   const st: React.CSSProperties = { fontFamily: BEBAS, fontWeight: 800, fontVariantNumeric: "lining-nums", fontSize: 190, lineHeight: 0.9, letterSpacing: 0 };
   const streak = interpolate(f, [0, 12], [0, 1], clamp);
   return (
-    <div style={{ position: "absolute", left: left - 420 + s * 420 - out * 500, top, display: "flex", alignItems: "center", gap: 30 }}>
+    <div style={{ position: "absolute", left: left - 420 + s * 420 - out * 500, top, display: "flex", alignItems: "center", gap: 30, transform: "scale(0.78)", transformOrigin: "left center" }}>
       <div style={{ position: "absolute", left: -300, top: 110, width: 600 * (1 - streak), height: 6, borderRadius: 3, background: `linear-gradient(90deg, transparent, ${GOLD})`, opacity: 1 - streak }} />
       <div style={{ ...glass, minWidth: 230, height: 270, padding: "0 26px", borderRadius: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ position: "relative", paddingTop: 20 }}>
