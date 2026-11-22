@@ -3,8 +3,8 @@ import { AbsoluteFill, Easing, interpolate, Sequence, staticFile, useCurrentFram
 import { Audio, Video } from "@remotion/media";
 import { CLIPS, DURATION, SEGS } from "./clips";
 import {
-  BLUE, big, Chip, clamp, Confetti, EASE, fmt, FullCard, GOLD, glass, INTER, Item, Laptop, Money, N, NAVY, NumCard,
-  ORANGE, Phone, Rays, Rise, SHADOW, Slam, Stack, useSpring, W,
+  BLUE, big, Chip, clamp, Confetti, EASE, fmt, FullCard, GOLD, glass, INTER, Item, Money, N, NAVY, NumCard,
+  ORANGE, DARK_BG, DevicePhoto, Rays, Rise, SHADOW, Slam, Stack, useSpring, W,
 } from "./ui";
 
 // "SMM Start" — YouTube 16:9 edit after the references: wide/close jump framing on every cut,
@@ -70,43 +70,35 @@ const ev = (name: string, a: number, b: number, render: Ev["render"], sfx?: stri
 // 0:00 — "17 Pro Max va MacBook Neo'ni qanday qilib yutib olish mumkin?"
 const HookCard: React.FC<{ dur: number; r: (s: number) => number }> = ({ dur, r }) => {
   const f = useCurrentFrame();
-  const ps = useSpring(0, { damping: 13, stiffness: 120, mass: 0.9 });
-  const ls = useSpring(r(1.05), { damping: 14, stiffness: 120, mass: 0.9 });
+  const ps = useSpring(0, { damping: 14, stiffness: 110, mass: 0.9 });
+  const ls = useSpring(r(1.05), { damping: 15, stiffness: 110, mass: 0.9 });
   const lOn = f >= r(1.05);
-  const phoneX = interpolate(ls, [0, 1], [0, -330]);
-  const float = Math.sin(f * 0.09) * 10;
-  const shine = interpolate(f, [8, 40], [0, 1], clamp);
-  const zoom = interpolate(f, [0, dur], [1, 1.06]);
+  const float = Math.sin(f * 0.09) * 8;
+  const zoom = interpolate(f, [0, dur], [1, 1.07]);
   const q1 = r(2.1);
   const q2 = r(2.5);
+  // phone alone in the centre first, then slides left when the laptop arrives
+  const phoneX = interpolate(ls, [0, 1], [960 - 345, 150]);
   return (
-    <FullCard dur={dur} bloom={ORANGE}>
-      <Rays />
+    <FullCard dur={dur} bg={DARK_BG} bloom={ORANGE}>
+      <Rays color={ORANGE} opacity={0.16} />
       <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
-        {/* phone */}
-        <div style={{ position: "absolute", left: 960 - 150 + phoneX, top: 250 + float + (1 - ps) * 700, perspective: 1400 }}>
-          <div style={{ transform: `rotateY(${(1 - ps) * 160 - 14 + Math.sin(f * 0.05) * 6}deg) rotateZ(${(1 - ps) * -25}deg) scale(0.9)` }}>
-            <Phone w={300} shine={shine} />
-          </div>
-          <div style={{ ...big(78), textAlign: "center", marginTop: 6, opacity: ps }}>17 PRO MAX</div>
+        <div style={{ position: "absolute", left: phoneX, top: 10 + float + (1 - ps) * 900, transform: `rotate(${(1 - ps) * -18}deg) scale(${0.8 + 0.2 * ps})`, opacity: Math.min(1, ps * 2) }}>
+          <DevicePhoto kind="phone" h={860} />
         </div>
-        {/* laptop */}
         {lOn && (
-          <div style={{ position: "absolute", left: 960 - 10 + (1 - ls) * 900, top: 380 - float * 0.6, perspective: 1600 }}>
-            <div style={{ transform: `rotateY(${(1 - ls) * -60 + 10}deg) scale(0.78)`, transformOrigin: "left center" }}>
-              <Laptop w={760} shine={shine} />
-            </div>
-            <div style={{ ...big(78), textAlign: "center", width: 600, marginTop: -20, opacity: ls }}>MACBOOK NEO</div>
+          <div style={{ position: "absolute", left: 1140 + (1 - ls) * 900, top: -10 - float * 0.6, transform: `rotate(${(1 - ls) * 14}deg)`, opacity: Math.min(1, ls * 2) }}>
+            <DevicePhoto kind="laptop" h={900} />
           </div>
         )}
-        {lOn && <Slam at={r(1.05) + 4} style={{ position: "absolute", left: 960 - 205, top: 470, ...big(140, GOLD) }}>+</Slam>}
-        {/* question */}
-        <div style={{ position: "absolute", top: 70, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 26 }}>
+        {lOn && <Slam at={r(1.05) + 4} style={{ position: "absolute", left: 960 - 30, top: 380, ...big(170, GOLD) }}>+</Slam>}
+        <div style={{ position: "absolute", left: phoneX + 170, top: 820 + float, opacity: interpolate(f, [q1 - 6, q1], [1, 0], clamp) }}><Slam at={2} style={big(80)}>17 PRO MAX</Slam></div>
+        <div style={{ position: "absolute", bottom: 40, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 26 }}>
           <Slam at={q1} style={big(110)}>{N("QANDAY QILIB")}</Slam>
           <Slam at={q2} style={big(110, GOLD)}>{N("YUTIB OLISH")}</Slam>
           <Slam at={q2 + 6} style={big(110)}>{N("MUMKIN?")}</Slam>
         </div>
-        <Confetti at={q2} cy={300} />
+        <Confetti at={q2} cy={420} />
       </AbsoluteFill>
     </FullCard>
   );
@@ -307,23 +299,22 @@ const PrizeQCard: React.FC<{ dur: number }> = ({ dur }) => {
   const f = useCurrentFrame();
   const ps = useSpring(4, { damping: 13, stiffness: 120 });
   const ls = useSpring(12, { damping: 14, stiffness: 120 });
-  const float = Math.sin(f * 0.09) * 10;
-  const shine = interpolate(f, [10, 50], [0, 1], clamp);
+  const float = Math.sin(f * 0.09) * 8;
   return (
-    <FullCard dur={dur} bloom={ORANGE}>
-      <Rays />
-      <div style={{ position: "absolute", top: 60, left: 0, right: 0, display: "flex", justifyContent: "center", alignItems: "baseline", gap: 20 }}>
-        <Slam at={0} style={big(150, GOLD)}>3</Slam>
+    <FullCard dur={dur} bg={DARK_BG} bloom={ORANGE}>
+      <Rays color={ORANGE} opacity={0.14} />
+      <div style={{ position: "absolute", left: 230, top: 60 + float + (1 - ps) * 900, transform: `rotate(${(1 - ps) * -20}deg)` }}>
+        <DevicePhoto kind="phone" h={760} />
+      </div>
+      <div style={{ position: "absolute", left: 1090 + (1 - ls) * 1000, top: 20 - float * 0.6 }}>
+        <DevicePhoto kind="laptop" h={800} />
+      </div>
+      <div style={{ position: "absolute", left: 960 - 160, top: 330, display: "flex", alignItems: "baseline", gap: 6 }}>
+        <Slam at={0} from={2.6} style={big(220, GOLD)}>3</Slam>
         <Rise at={4} style={big(110)}>-SAVOL</Rise>
       </div>
-      <div style={{ position: "absolute", left: 380, top: 270 + float + (1 - ps) * 700, transform: `rotate(${-8 + (1 - ps) * -30}deg) scale(0.85)` }}>
-        <Phone w={300} shine={shine} />
-      </div>
-      <div style={{ position: "absolute", left: 760 + (1 - ls) * 1000, top: 380 - float * 0.6 }}>
-        <Laptop w={760} shine={shine} />
-      </div>
       <div style={{ position: "absolute", bottom: 50, left: 0, right: 0, textAlign: "center" }}>
-        <Rise at={18} style={{ fontFamily: INTER, fontWeight: 800, fontSize: 60, color: "white" }}>{N("Qanday qilib yutib olish mumkin?")}</Rise>
+        <Rise at={18} style={{ fontFamily: INTER, fontWeight: 800, fontSize: 60, color: "white", textShadow: SHADOW }}>{N("Qanday qilib yutib olish mumkin?")}</Rise>
       </div>
     </FullCard>
   );
@@ -360,11 +351,10 @@ const PlaceCard: React.FC<{ dur: number; place: string; name: string; device: "p
   const f = useCurrentFrame();
   const ds = useSpring(6, { damping: 12, stiffness: 110, mass: 0.9 });
   const float = Math.sin(f * 0.09) * 10;
-  const shine = interpolate(f, [14, 54], [0, 1], clamp);
   const medal = place === "1" ? GOLD : "#D9DDE6";
   return (
-    <FullCard dur={dur} bloom={device === "phone" ? ORANGE : BLUE}>
-      <Rays color={medal} />
+    <FullCard dur={dur} bg={DARK_BG} bloom={device === "phone" ? ORANGE : GOLD}>
+      <Rays color={medal} opacity={0.14} />
       <div style={{ position: "absolute", left: 150, top: 250 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
           <Slam at={0} from={2.6} style={big(380, medal)}>{place}</Slam>
@@ -375,10 +365,8 @@ const PlaceCard: React.FC<{ dur: number; place: string; name: string; device: "p
           <Rise at={noteAt} style={{ fontFamily: INTER, fontWeight: 700, fontSize: 44, color: GOLD, marginTop: 24 }}>{N(note)}</Rise>
         )}
       </div>
-      <div style={{ position: "absolute", left: device === "phone" ? 1250 : 1000, top: (device === "phone" ? 150 : 330) + float + (1 - ds) * 800, perspective: 1400 }}>
-        <div style={{ transform: `rotateY(${(1 - ds) * 140 + (device === "phone" ? -12 : 8)}deg) rotateZ(${device === "phone" ? 6 : 0}deg)` }}>
-          {device === "phone" ? <Phone w={360} shine={shine} /> : <Laptop w={820} shine={shine} />}
-        </div>
+      <div style={{ position: "absolute", right: 120, top: (device === "phone" ? 70 : 20) + float + (1 - ds) * 900, transform: `rotate(${(1 - ds) * 16}deg) scale(${0.85 + 0.15 * ds})` }}>
+        <DevicePhoto kind={device} h={device === "phone" ? 880 : 960} />
       </div>
       <Confetti at={8} cx={device === "phone" ? 1430 : 1400} cy={420} />
     </FullCard>

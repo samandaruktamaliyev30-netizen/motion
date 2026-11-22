@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Easing, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { loadFont } from "@remotion/fonts";
 import { INTER } from "../shared/StyleCaptions";
 import { toNewAlphabet } from "../kiut2/alphabet";
@@ -325,5 +325,21 @@ export const Confetti: React.FC<{ at: number; n?: number; cx?: number; cy?: numb
         return <div key={i} style={{ position: "absolute", left: x, top: y, width: 14, height: 8, background: cols[i % cols.length], transform: `rotate(${f * (10 + i)}deg)`, opacity: interpolate(f, [40, 60], [1, 0], clamp), borderRadius: 2 }} />;
       })}
     </>
+  );
+};
+
+/* ======================= device photos (user-supplied) ======================= */
+// iphone.jpg 1122×1402, macbook.jpg 1024×1536 (text "The Colorful" / "Explore Now" removed).
+// Black photo backgrounds melt into a dark card through a soft radial mask.
+export const DEVICE = {
+  phone: { src: "v12/iphone.jpg", ar: 1122 / 1402 },
+  laptop: { src: "v12/macbook.jpg", ar: 1024 / 1536 },
+};
+export const DARK_BG = "radial-gradient(ellipse at 50% 55%, #1A120C 0%, #050505 70%)";
+export const DevicePhoto: React.FC<{ kind: keyof typeof DEVICE; h: number; style?: React.CSSProperties }> = ({ kind, h, style }) => {
+  const d = DEVICE[kind];
+  const mask = "radial-gradient(ellipse 50% 50% at 50% 50%, black 62%, transparent 100%)";
+  return (
+    <Img src={staticFile(d.src)} style={{ height: h, width: h * d.ar, display: "block", maskImage: mask, WebkitMaskImage: mask, ...style }} />
   );
 };
