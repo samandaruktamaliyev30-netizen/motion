@@ -16,6 +16,8 @@ import { Oddiy } from "./v11/Oddiy";
 import { DURATION as ODDIY_DURATION } from "./v11/data";
 import { DURATION as TIPS_DURATION } from "./v10/data";
 import { SmmStart, SMM_DURATION } from "./v12/SmmStart";
+import { SmmThumb } from "./v12/Thumbnail";
+import { Still } from "remotion";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -46,6 +48,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="DTMYangilik" component={Sodda} durationInFrames={SODDA_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="ImtihonMaslahat" component={Tips} durationInFrames={TIPS_DURATION} fps={30} width={1080} height={1920} />
       <Composition id="BiologiyaImtihon" component={Oddiy} durationInFrames={ODDIY_DURATION} fps={30} width={1080} height={1920} />
+      <Still id="SmmThumbnail" component={SmmThumb} width={1920} height={1080} />
       <Composition id="SmmStart" component={SmmStart} durationInFrames={SMM_DURATION} fps={30} width={1920} height={1080} />
     </>
   );
