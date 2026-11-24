@@ -6,8 +6,8 @@ import { INTER } from "../v4/ui";
 import { PAGES } from "./captions";
 import { DURATION, FACE, G, s, SHOTS } from "./timeline";
 
-// Monochrome, reference-style overlays: white glass cards above the head, clean white captions
-// below the chin. No colour grading on the footage.
+// Monochrome, reference-style overlays: white cards centred in frame (captions hidden while a card
+// is up), clean white captions below the chin otherwise. Footage colour and voice are untouched.
 const INK = "#0E0F12";
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const ease = Easing.bezier(0.16, 1, 0.3, 1);
@@ -28,8 +28,8 @@ const Top: React.FC<{ dur: number; children: React.ReactNode }> = ({ dur, childr
   const inn = spring({ frame: f, fps, config: { damping: 16, stiffness: 170, mass: 0.6 } });
   const out = p(f, dur - 7, dur);
   return (
-    <AbsoluteFill style={{ alignItems: "center" }}>
-      <div style={{ position: "absolute", top: 120, opacity: Math.min(inn, 1 - out), transform: `translateY(${(1 - inn) * -60 - out * 30}px) scale(${0.94 + 0.06 * inn})`, transformOrigin: "50% 0%" }}>{children}</div>
+    <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
+      <div style={{ opacity: Math.min(inn, 1 - out), transform: `translateY(${(1 - inn) * 60 + out * 30}px) scale(${0.9 + 0.1 * inn})`, transformOrigin: "50% 50%" }}>{children}</div>
     </AbsoluteFill>
   );
 };
@@ -203,6 +203,8 @@ const Captions: React.FC = () => {
   const { fps } = useVideoConfig();
   const page = PAGES.find((q) => f >= q.from && f < q.to);
   if (!page) return null;
+  // No captions while a card is on screen.
+  if (Object.values(G).some(([a, b]) => f >= s(a) && f < s(b))) return null;
   const exit = interpolate(f, [page.to - 3, page.to], [1, 0], clamp);
   return (
     <AbsoluteFill style={{ top: 1210, height: "auto", alignItems: "center", opacity: exit }}>
@@ -256,7 +258,7 @@ export const Oz: React.FC = () => (
       );
     })}
     <Captions />
-    <Audio name="Voice (cleaned)" src={staticFile("oz/voice.wav")} />
+    <Audio name="Voice (original, gain only)" src={staticFile("oz/voice.wav")} />
     <Audio name="Music: ICEGERGERT – Aktrisa (from 4 s)" src={staticFile("oz/music.wav")} />
   </AbsoluteFill>
 );
