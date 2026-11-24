@@ -11,6 +11,7 @@ import { Nano, DURATION as NANO_DURATION } from "./nano/Nano";
 import { Nano2, DURATION as NANO2_DURATION } from "./nano2/Nano2";
 import { Nano3, DURATION as NANO3_DURATION } from "./nano3/Nano3";
 import { Oz, DURATION as OZ_DURATION } from "./oz/Oz";
+import { Oz2 } from "./oz/Oz2";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -92,6 +93,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="Mijoz1500"
         component={Oz}
+        durationInFrames={OZ_DURATION}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="Mijoz1500v2"
+        component={Oz2}
         durationInFrames={OZ_DURATION}
         fps={30}
         width={1080}
