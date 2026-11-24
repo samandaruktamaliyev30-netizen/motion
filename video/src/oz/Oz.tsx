@@ -6,7 +6,7 @@ import { INTER } from "../v4/ui";
 import { PAGES } from "./captions";
 import { DURATION, FACE, G, s, SHOTS } from "./timeline";
 
-// Monochrome, reference-style overlays: white cards centred in frame (captions hidden while a card
+// Monochrome, reference-style overlays: white cards below the chin (captions hidden while a card
 // is up), clean white captions below the chin otherwise. Footage colour and voice are untouched.
 const INK = "#0E0F12";
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -28,8 +28,8 @@ const Top: React.FC<{ dur: number; children: React.ReactNode }> = ({ dur, childr
   const inn = spring({ frame: f, fps, config: { damping: 16, stiffness: 170, mass: 0.6 } });
   const out = p(f, dur - 7, dur);
   return (
-    <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
-      <div style={{ opacity: Math.min(inn, 1 - out), transform: `translateY(${(1 - inn) * 60 + out * 30}px) scale(${0.9 + 0.1 * inn})`, transformOrigin: "50% 50%" }}>{children}</div>
+    <AbsoluteFill style={{ alignItems: "center" }}>
+      <div style={{ position: "absolute", top: 1230, opacity: Math.min(inn, 1 - out), transform: `translateY(${(1 - inn) * 60 + out * 30}px) scale(${0.9 + 0.1 * inn})`, transformOrigin: "50% 0%" }}>{children}</div>
     </AbsoluteFill>
   );
 };
